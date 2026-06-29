@@ -53,7 +53,7 @@ export default function TradeTerminal() {
   const [asset, setAsset] = useState('XAUUSD');
   const [interval, setInterval_] = useState(5);
   const [decimals, setDecimals] = useState(3);
-  const [payoutPct, setPayoutPct] = useState(0.95); // Hardcoded to 95% on user dashboard (admin-side multiplier ignored on display)
+  const [payoutPct, setPayoutPct] = useState(0.85); // Initial fallback; live value comes from /api/candles which derives it from the admin's payoutRate setting (e.g. 1.4x → 0.4 → 40%)
   const [livePrice, setLivePrice] = useState(null);
   const [candles, setCandles] = useState([]);
   const [support, setSupport] = useState(null);
@@ -175,7 +175,9 @@ export default function TradeTerminal() {
         if (!stop) {
           setCandles(r.candles || []);
           setDecimals(r.decimals);
-          // payoutPct intentionally NOT updated from server — user dashboard is hardcoded to 95%
+          // Reflect admin-configured payoutRate on the user dashboard so the
+          // displayed % and the Payout amount update whenever admin changes it.
+          if (typeof r.payout === 'number') setPayoutPct(r.payout);
           if (r.support) setSupport(r.support);
           if (r.resistance) setResistance(r.resistance);
         }
