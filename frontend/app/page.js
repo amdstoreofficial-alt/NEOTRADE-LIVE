@@ -1,19 +1,25 @@
 'use client';
 
+// Ported verbatim from NEOTRADE/frontend/src/pages/Landing.js
+// Adaptations for Next.js App Router:
+//   • react-router-dom Link/useNavigate  → next/link Link + next/navigation useRouter
+//   • api.get('/api/prices')  → fetch('/api/assets') (NEXTTRADE live feed) reshaped to match
+//   • useAuth() (CRA AuthContext)  → reads JWT from localStorage via @/lib/api.getStoredUser
+// Everything visual (gradients, hero, ticker, sections, animations, copy) is identical to NeoTrade.
+
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import {
-  ArrowRight, BarChart3, Zap, Shield, Headphones, Award,
-  TrendingUp, CheckCircle2, Star, Globe, Wallet, Cpu, Target,
-  Trophy, Users, Clock, Lock, DollarSign
+  ArrowRight, TrendingUp, Shield, Zap, Trophy, Users,
+  Clock, DollarSign, BarChart3, Globe, Star,
+  Target, Cpu, Lock, Wallet
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import QuotexLogo from '@/components/QuotexLogo';
+import NeotradeNavbar from '@/components/NeotradeNavbar';
+import { getStoredUser } from '@/lib/api';
 
-// Animated counter (NeoTrade style)
+// Animated counter component (verbatim)
 const AnimatedCounter = ({ value, suffix = '' }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
@@ -21,356 +27,462 @@ const AnimatedCounter = ({ value, suffix = '' }) => {
 
   useEffect(() => {
     if (!isInView) return;
-    const duration = 1800;
+    const duration = 2000;
     const steps = 60;
-    const inc = value / steps;
-    let cur = 0;
-    const t = setInterval(() => {
-      cur += inc;
-      if (cur >= value) { setCount(value); clearInterval(t); }
-      else setCount(Math.floor(cur));
+    const increment = value / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= value) { setCount(value); clearInterval(timer); }
+      else setCount(Math.floor(current));
     }, duration / steps);
-    return () => clearInterval(t);
+    return () => clearInterval(timer);
   }, [isInView, value]);
 
   return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
 };
 
-const Feature = ({ icon: Icon, title, desc, delay = 0 }) => (
+// Feature card with animation (verbatim)
+const FeatureCard = ({ icon: Icon, title, description, delay }) => (
   <motion.div
-    initial={{ opacity: 0, y: 24 }}
+    initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.55, delay }}
+    transition={{ duration: 0.6, delay }}
     viewport={{ once: true }}
-    className="bg-[#11161e] border border-white/5 rounded-2xl p-6 hover:border-[#00b97a]/40 transition-all hover:-translate-y-1"
+    className="feature-card group"
   >
-    <div className="w-12 h-12 rounded-xl bg-[#00b97a]/10 border border-[#00b97a]/20 flex items-center justify-center mb-4">
-      <Icon className="w-6 h-6 text-[#00b97a]" />
+    <div className="w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center mb-5 group-hover:bg-brand/20 transition-colors">
+      <Icon className="w-7 h-7 text-brand" />
     </div>
-    <h3 className="text-white text-lg font-semibold mb-2">{title}</h3>
-    <p className="text-white/60 text-sm leading-relaxed">{desc}</p>
+    <h3 className="text-lg font-bold text-white mb-2">{title}</h3>
+    <p className="text-sm text-gray-400 leading-relaxed">{description}</p>
   </motion.div>
 );
 
-const Testimonial = ({ name, role, content, rating, delay = 0 }) => (
+// Testimonial card (verbatim)
+const TestimonialCard = ({ name, role, content, rating, delay }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.95 }}
     whileInView={{ opacity: 1, scale: 1 }}
     transition={{ duration: 0.5, delay }}
     viewport={{ once: true }}
-    className="bg-[#11161e] border border-white/5 rounded-2xl p-6 hover:border-[#00b97a]/30 transition-all"
+    className="bg-panel border border-white/5 rounded-2xl p-6 hover:border-brand/20 transition-all"
   >
-    <div className="flex gap-0.5 mb-3">
-      {Array.from({ length: rating }).map((_, i) => (
+    <div className="flex gap-1 mb-4">
+      {[...Array(rating)].map((_, i) => (
         <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
       ))}
     </div>
-    <p className="text-white/80 text-sm leading-relaxed mb-4">"{content}"</p>
+    <p className="text-gray-300 text-sm leading-relaxed mb-4">"{content}"</p>
     <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-full bg-[#00b97a]/20 text-[#00b97a] font-bold flex items-center justify-center">
+      <div className="w-10 h-10 rounded-full bg-brand/20 flex items-center justify-center text-brand font-bold">
         {name[0]}
       </div>
       <div>
         <div className="text-sm font-semibold text-white">{name}</div>
-        <div className="text-xs text-white/40">{role}</div>
+        <div className="text-xs text-gray-500">{role}</div>
       </div>
     </div>
   </motion.div>
 );
 
-export default function LandingPage() {
+export default function NeotradeLanding() {
   const router = useRouter();
+  const [user, setUser] = useState(null);
+  useEffect(() => { setUser(getStoredUser()); }, []);
+  const token = typeof window !== 'undefined' ? localStorage.getItem('qx_token') : null;
+
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+
+  // Real-time prices state — same shape as NeoTrade
+  const [livePrices, setLivePrices] = useState([
+    { symbol: 'BTC/USD', price: '-.--', change: '--%', up: true },
+    { symbol: 'ETH/USD', price: '-.--', change: '--%', up: true },
+    { symbol: 'EUR/USD', price: '-.--', change: '--%', up: false },
+    { symbol: 'XAU/USD', price: '-.--', change: '--%', up: true },
+    { symbol: 'GBP/USD', price: '-.--', change: '--%', up: true },
+    { symbol: 'SOL/USD', price: '-.--', change: '--%', up: true },
+  ]);
+
+  // Fetch real prices from NEXTTRADE /api/assets and reshape to the NeoTrade ticker schema.
+  useEffect(() => {
+    const fmt = (v, decimals = 2) => Number(v).toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    const want = [
+      { symbol: 'BTC/USD', srcDisplay: 'BTC/USD', decimals: 2 },
+      { symbol: 'ETH/USD', srcDisplay: 'ETH/USD', decimals: 2 },
+      { symbol: 'EUR/USD', srcDisplay: 'EUR/USD', decimals: 4 },
+      { symbol: 'XAU/USD', srcDisplay: 'XAU/USD', decimals: 2 },
+      { symbol: 'GBP/USD', srcDisplay: 'GBP/USD', decimals: 4 },
+      { symbol: 'SOL/USD', srcDisplay: 'SOL/USD', decimals: 2 },
+    ];
+    let cancelled = false;
+    let prev = {};
+
+    const tick = async () => {
+      try {
+        const res = await fetch('/api/assets', { cache: 'no-store' });
+        const data = await res.json();
+        const list = Array.isArray(data?.assets) ? data.assets : [];
+        const byDisplay = Object.fromEntries(list.map(a => [a.display, a]));
+        if (cancelled) return;
+        const next = want.map(w => {
+          const a = byDisplay[w.srcDisplay];
+          if (!a) return { symbol: w.symbol, price: '-.--', change: '--%', up: true };
+          const p = Number(a.price);
+          const last = prev[w.symbol] ?? p;
+          const change = last ? ((p - last) / last) * 100 : 0;
+          prev[w.symbol] = p;
+          return {
+            symbol: w.symbol,
+            price: fmt(p, w.decimals),
+            change: `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`,
+            up: change >= 0,
+          };
+        });
+        setLivePrices(next);
+      } catch (_) { /* keep last */ }
+    };
+    tick();
+    const interval = setInterval(tick, 5000);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, []);
 
   const features = [
-    { icon: BarChart3, title: 'Binary Options Trading', desc: 'Trade forex, crypto, and metals with up to 95% returns. Simple Buy/Sell predictions with 5-60 second expiry times.' },
-    { icon: Cpu, title: 'AI-Powered Predictions', desc: 'Advanced market intelligence analyses live order flow and gives high-confidence trading signals in real time.' },
-    { icon: Target, title: 'OTC + Live Candles', desc: 'Genuine OTC engine plus exchange-grade live feed. Authentic 1s, 5s, 15s candles for surgical entries.' },
-    { icon: Shield, title: 'Secure & Encrypted', desc: 'Bank-grade encryption, KYC checks, and instant crypto withdrawals. Your funds and identity are always safe.' },
-    { icon: Trophy, title: 'Trader Rewards', desc: 'Climb the leaderboard, earn payout boosts on streaks, and unlock account tiers with exclusive perks.' },
-    { icon: Users, title: 'Affiliate Program', desc: 'Refer traders and earn lifetime revenue share. Multi-tier commissions that scale with your network.' },
+    { icon: BarChart3, title: 'Binary Options Trading', description: 'Trade forex, crypto, and metals with up to 95% returns. Simple Buy/Sell predictions with 5-60 second expiry times.' },
+    { icon: Cpu, title: 'AI-Powered Predictions', description: 'Advanced GPT-5.2 AI analyzes market trends and provides real-time trading signals with confidence scores.' },
+    { icon: Target, title: 'Touch/No Touch Options', description: 'Predict if price will touch a target level. More ways to profit from market movements.' },
+    { icon: Shield, title: 'Secure & Regulated', description: 'Bank-grade encryption, KYC verification, and instant crypto deposits. Your funds are always safe.' },
+    { icon: Trophy, title: 'Trading Tournaments', description: 'Compete weekly for prize pools up to $10,000. Climb the leaderboard and prove your skills.' },
+    { icon: Users, title: 'Affiliate Program', description: 'Earn up to 10% commission on referrals. Multi-tier program with revenue sharing on trading profits.' },
   ];
 
   const stats = [
     { value: 50000, suffix: '+', label: 'Active Traders' },
     { value: 95, suffix: '%', label: 'Max Payout' },
     { value: 24, suffix: '/7', label: 'Support' },
-    { value: 400, suffix: '+', label: 'Assets' },
+    { value: 150, suffix: '+', label: 'Assets' },
   ];
 
   const testimonials = [
-    { name: 'Michael Chen', role: 'Professional Trader', content: 'The signals on NEOTRADE are incredibly tight. I\'ve increased my win rate by 40% since switching over.', rating: 5 },
-    { name: 'Sarah Johnson', role: 'Crypto Enthusiast', content: 'Finally a platform that combines simplicity with professional tools. Mobile experience is flawless.', rating: 5 },
-    { name: 'David Williams', role: 'Day Trader', content: 'Fast execution, great payouts, and the OTC candles feel surgical. Highly recommended.', rating: 5 },
+    { name: 'Michael Chen', role: 'Professional Trader', content: "The AI predictions are incredibly accurate. I've increased my win rate by 40% since joining NEOTRADE.", rating: 5 },
+    { name: 'Sarah Johnson', role: 'Crypto Enthusiast', content: 'Finally a platform that combines simplicity with professional tools. The mobile app is flawless.', rating: 5 },
+    { name: 'David Williams', role: 'Day Trader', content: 'Fast execution, great payouts, and the tournament feature keeps me coming back. Highly recommended!', rating: 5 },
   ];
 
   return (
-    <div className="min-h-screen bg-[#0c1015] text-white">
-      {/* Navbar */}
-      <header className="border-b border-white/5 bg-[#0c1015]/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" data-testid="nav-home"><QuotexLogo /></Link>
-          <nav className="hidden md:flex items-center gap-8 text-sm text-white/70">
-            <a href="#features" className="hover:text-white" data-testid="nav-features">Features</a>
-            <a href="#how" className="hover:text-white" data-testid="nav-how">How it works</a>
-            <a href="#faq" className="hover:text-white" data-testid="nav-faq">FAQ</a>
-            <a href="#about" className="hover:text-white" data-testid="nav-about">About</a>
-          </nav>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" className="text-white/80 hover:text-white" onClick={() => router.push('/login')} data-testid="nav-login">Log in</Button>
-            <Button className="bg-[#00b97a] hover:bg-[#00a86d] text-white font-semibold" onClick={() => router.push('/signup')} data-testid="nav-signup">Sign Up</Button>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-app overflow-x-hidden neo-page text-white">
+      <NeotradeNavbar />
 
-      {/* Hero */}
+      {/* Price Ticker */}
+      <div className="fixed top-14 left-0 right-0 z-40 bg-panel/80 backdrop-blur-xl border-b border-white/5 overflow-hidden">
+        <div className="flex animate-marquee whitespace-nowrap py-2 px-4 will-change-transform">
+          {[...livePrices, ...livePrices].map((p, i) => (
+            <div key={i} className="flex items-center gap-3 text-sm mr-8 shrink-0">
+              <span className="font-semibold text-white">{p.symbol}</span>
+              <span className="font-mono text-gray-300">{p.price}</span>
+              <span className={`font-mono text-xs ${p.up ? 'text-buy' : 'text-sell'}`}>{p.change}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Hero Section */}
       <motion.section
         ref={heroRef}
         style={{ opacity: heroOpacity, scale: heroScale }}
-        className="relative overflow-hidden"
+        className="relative min-h-screen flex items-center justify-center pt-32 pb-20 overflow-hidden"
       >
-        <div className="absolute inset-0 qx-bg-grid opacity-30" />
-        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-[#00b97a]/10 rounded-full blur-3xl" />
-        <div className="absolute top-32 -right-32 w-[500px] h-[500px] bg-[#1a8eff]/10 rounded-full blur-3xl" />
-        <div className="container mx-auto px-4 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center relative">
-          <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }}>
-            <div className="inline-flex items-center gap-2 bg-[#00b97a]/10 border border-[#00b97a]/30 text-[#00b97a] text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
-              <Zap className="w-3.5 h-3.5" />
-              AI-POWERED TRADING PLATFORM
-            </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.1] mb-6">
-              Trade Smarter with{' '}
-              <span className="bg-gradient-to-r from-[#22d3ee] via-[#00e692] to-[#00b97a] bg-clip-text text-transparent">
-                NEOTRADE
-              </span>
-            </h1>
-            <p className="text-white/60 text-lg mb-8 max-w-xl">
-              Binary options trading with AI predictions, real-time market data, and up to 95% returns. Join 50,000+ traders worldwide on NEOTRADE.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Button size="lg" className="bg-[#00b97a] hover:bg-[#00a86d] text-white font-bold text-base px-8 h-14" onClick={() => router.push('/signup')} data-testid="cta-start-trading">
-                Start Trading Now <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-              <Button size="lg" variant="outline" className="bg-white text-[#0c1015] hover:bg-white/90 border-0 font-bold text-base px-8 h-14" onClick={() => router.push('/signup')} data-testid="cta-demo">
-                <DollarSign className="w-4 h-4 mr-1.5" /> $10,000 Demo Account
-              </Button>
-            </div>
-            <div className="flex flex-wrap items-center gap-6 mt-10 text-sm text-white/50">
-              <div className="flex items-center gap-2"><Lock className="w-4 h-4 text-[#00b97a]"/> SSL Encrypted</div>
-              <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-[#00b97a]"/> Instant Withdrawals</div>
-              <div className="flex items-center gap-2"><Shield className="w-4 h-4 text-amber-400"/> KYC Verified</div>
-            </div>
+        {/* Background Image & Overlay */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=2000&q=80"
+            alt="Trading Background"
+            className="w-full h-full object-cover opacity-30"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-app/50 via-app/80 to-app" />
+          <div className="absolute inset-0 hero-gradient" />
+        </div>
+
+        {/* Animated Orbs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-buy/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
+
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/10 border border-brand/20 text-brand text-sm font-medium mb-6">
+              <Zap className="w-4 h-4" /> AI-Powered Trading Platform
+            </span>
           </motion.div>
 
-          {/* Hero illustration: live mini chart */}
-          <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }} className="relative">
-            <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-[#11161e] to-[#0a0d12] border border-white/10 p-4 shadow-2xl relative overflow-hidden">
-              <div className="absolute inset-0 qx-bg-grid opacity-20" />
-              <div className="flex items-center justify-between mb-3 relative">
-                <div>
-                  <div className="text-xs text-white/50">XAU/USD (OTC)</div>
-                  <div className="text-2xl font-bold text-white">2,350.<span className="text-[#00b97a]">128</span></div>
-                </div>
-                <div className="px-2.5 py-1 rounded-md bg-[#00b97a]/15 text-[#00b97a] text-xs font-bold">+0.42%</div>
-              </div>
-              <svg viewBox="0 0 400 220" className="w-full h-full relative">
-                <defs>
-                  <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="#00b97a" stopOpacity="0.4"/>
-                    <stop offset="100%" stopColor="#00b97a" stopOpacity="0"/>
-                  </linearGradient>
-                </defs>
-                <path d="M0 160 L40 140 L80 150 L120 110 L160 130 L200 90 L240 100 L280 70 L320 85 L360 50 L400 65 L400 220 L0 220 Z" fill="url(#g1)"/>
-                <path d="M0 160 L40 140 L80 150 L120 110 L160 130 L200 90 L240 100 L280 70 L320 85 L360 50 L400 65" fill="none" stroke="#00b97a" strokeWidth="2.5"/>
-                {[40,80,120,160,200,240,280,320,360].map((x,i) => (
-                  <circle key={i} cx={x} cy={[140,150,110,130,90,100,70,85,50][i]} r="3" fill="#00b97a" />
-                ))}
-              </svg>
-              <div className="absolute right-6 bottom-6 flex flex-col gap-2 w-40">
-                <div className="bg-[#00b97a] text-white text-sm font-bold py-3 rounded-lg text-center">UP ↑</div>
-                <div className="bg-[#ff5555] text-white text-sm font-bold py-3 rounded-lg text-center">DOWN ↓</div>
-              </div>
+          <motion.h1
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+          >
+            Trade Smarter with<br />
+            <span className="text-gradient-brand">NEOTRADE</span>
+          </motion.h1>
+
+          <motion.p
+            className="text-lg sm:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            Binary options trading with AI predictions, real-time market data,
+            and up to 95% returns. Join 50,000+ traders worldwide.
+          </motion.p>
+
+          <motion.div
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            <button
+              onClick={() => router.push(token ? '/trade' : '/signup')}
+              className="group px-8 py-4 rounded-xl bg-gradient-brand text-white font-bold text-base transition-all hover:shadow-[0_0_40px_rgba(139,92,246,0.5)] flex items-center gap-2"
+              data-testid="cta-start-trading"
+            >
+              Start Trading Now
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button
+              onClick={() => router.push('/signup')}
+              className="px-8 py-4 rounded-xl bg-white/5 border border-white/10 text-white font-semibold text-base hover:bg-white/10 transition-all flex items-center gap-2"
+              data-testid="cta-demo"
+            >
+              <DollarSign className="w-5 h-5" />
+              $10,000 Demo Account
+            </button>
+          </motion.div>
+
+          {/* Trust Badges */}
+          <motion.div
+            className="flex flex-wrap items-center justify-center gap-6 mt-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <Lock className="w-4 h-4 text-buy" />
+              <span>SSL Encrypted</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <Clock className="w-4 h-4 text-brand" />
+              <span>Instant Withdrawals</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <Shield className="w-4 h-4 text-amber-400" />
+              <span>KYC Verified</span>
             </div>
           </motion.div>
         </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <div className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-2">
+            <div className="w-1 h-2 bg-brand rounded-full" />
+          </div>
+        </motion.div>
       </motion.section>
 
-      {/* Stats */}
-      <section className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {stats.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              viewport={{ once: true }}
-              className="text-center p-6 rounded-2xl bg-[#11161e]/70 border border-white/5"
-              data-testid={`stat-${s.label.toLowerCase().replace(/\s+/g, '-')}`}
+      {/* Stats Section */}
+      <section className="py-20 relative">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((stat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                viewport={{ once: true }}
+                className="text-center p-6 rounded-2xl bg-panel/50 border border-white/5"
+              >
+                <div className="text-3xl sm:text-4xl font-bold text-brand mb-2">
+                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                </div>
+                <div className="text-sm text-gray-500 uppercase tracking-wider">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24 relative" data-testid="features-section">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-brand mb-4 block">Platform Features</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+              Everything You Need to<br />
+              <span className="text-gradient-brand">Trade Profitably</span>
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              Professional-grade tools, AI insights, and a seamless trading experience designed for both beginners and experts.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature, idx) => (
+              <FeatureCard key={idx} {...feature} delay={idx * 0.1} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-24 bg-panel/30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-brand mb-4 block">Getting Started</span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Start Trading in Minutes</h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { step: '01', title: 'Create Account', desc: 'Sign up in 30 seconds. No lengthy verification for demo trading.' },
+              { step: '02', title: 'Fund or Demo', desc: 'Deposit crypto instantly or start with $10,000 demo balance.' },
+              { step: '03', title: 'Start Trading', desc: 'Choose an asset, predict direction, and earn up to 95% returns.' },
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.15 }}
+                viewport={{ once: true }}
+                className="relative text-center p-8"
+              >
+                <div className="text-6xl font-bold text-brand/10 absolute top-4 left-1/2 -translate-x-1/2">{item.step}</div>
+                <div className="relative z-10 pt-8">
+                  <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
+                  <p className="text-gray-400 text-sm">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-24">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-brand mb-4 block">Testimonials</span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">Trusted by Traders Worldwide</h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {testimonials.map((t, idx) => (
+              <TestimonialCard key={idx} {...t} delay={idx * 0.1} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand/10 via-transparent to-buy/10" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+              Ready to Start Trading?
+            </h2>
+            <p className="text-gray-400 text-lg mb-10 max-w-2xl mx-auto">
+              Join thousands of traders who are already profiting with NEOTRADE.
+              Start with a free demo account today.
+            </p>
+            <button
+              onClick={() => router.push('/signup')}
+              className="px-10 py-5 rounded-xl bg-gradient-brand text-white font-bold text-lg transition-all hover:shadow-[0_0_50px_rgba(236,72,153,0.5)] inline-flex items-center gap-3"
+              data-testid="cta-final"
             >
-              <div className="text-3xl md:text-4xl font-bold text-[#00b97a] mb-1">
-                <AnimatedCounter value={s.value} suffix={s.suffix} />
-              </div>
-              <div className="text-xs text-white/50 uppercase tracking-wider">{s.label}</div>
-            </motion.div>
-          ))}
+              Create Free Account
+              <ArrowRight className="w-6 h-6" />
+            </button>
+          </motion.div>
         </div>
       </section>
 
-      {/* Features */}
-      <section id="features" className="container mx-auto px-4 py-16">
-        <motion.div
-          initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#00b97a] mb-3 block">Platform Features</span>
-          <h2 className="text-3xl md:text-5xl font-bold">
-            Everything You Need to{' '}
-            <span className="bg-gradient-to-r from-[#22d3ee] via-[#00e692] to-[#00b97a] bg-clip-text text-transparent">Trade Profitably</span>
-          </h2>
-          <p className="text-white/50 max-w-2xl mx-auto mt-4">
-            Professional-grade tools, AI insights, and a seamless trading experience designed for both beginners and experts.
-          </p>
-        </motion.div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {features.map((f, i) => <Feature key={f.title} {...f} delay={i * 0.08} />)}
-        </div>
-      </section>
-
-      {/* Why NEOTRADE strip */}
-      <section className="container mx-auto px-4 py-12">
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            { icon: Wallet, t: '$1 minimum trade amount', d: 'Start trading with as little as $1 — risk-managed sizing all the way up to $1,000 per ticket.' },
-            { icon: Award, t: '50% Bonus on first deposit', d: 'Get a 50% bonus on your first deposit of $50 or more — boost your balance instantly.' },
-            { icon: Shield, t: 'Risk-free demo trading', d: 'Unlimited practice on a demo account loaded with $10,000 — exactly the same engine as live.' },
-            { icon: CheckCircle2, t: '0% deposit/withdrawal fees', d: 'No hidden fees on any deposits or withdrawals — what you see is what you get.' },
-            { icon: Headphones, t: '24/7 Online Support', d: 'Real humans, real time. Our trading specialists are available around the clock.' },
-            { icon: TrendingUp, t: 'Account Tier Boost', d: 'Climb VIP tiers for higher payouts, exclusive promos, and dedicated account managers.' },
-          ].map((it, i) => (
-            <Feature key={it.t} icon={it.icon} title={it.t} desc={it.d} delay={i * 0.06} />
-          ))}
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section id="how" className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-2">Start trading with NEOTRADE</h2>
-        <p className="text-white/50 text-center mb-12">in 3 simple steps</p>
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            { n: '01', t: 'Sign up', d: 'Open an account for free. Just takes a minute — no lengthy verification for demo.' },
-            { n: '02', t: 'Practice', d: 'Sharpen your skills with a $10,000 demo account on the same engine as live markets.' },
-            { n: '03', t: 'Deposit and trade', d: 'Crypto, card, or bank deposits — minimum $10. Trade in seconds with 95% payouts.' },
-          ].map(s => (
-            <div key={s.n} className="bg-[#11161e] border border-white/5 rounded-2xl p-8">
-              <div className="text-5xl font-extrabold text-[#00b97a]/30 mb-2">{s.n}</div>
-              <h3 className="text-xl font-semibold mb-2">{s.t}</h3>
-              <p className="text-white/60 text-sm">{s.d}</p>
+      {/* Footer */}
+      <footer className="border-t border-white/5 py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="grid md:grid-cols-4 gap-10 mb-12">
+            <div>
+              <Link href="/" className="text-2xl font-bold tracking-tight inline-flex items-center gap-2">
+                <span className="text-gradient-brand">NEO</span>
+                <span className="text-white">TRADE</span>
+              </Link>
+              <p className="text-sm text-gray-500 mt-4 leading-relaxed">
+                AI-powered binary options trading platform with real-time market data and professional tools.
+              </p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Trader opinions */}
-      <section className="container mx-auto px-4 py-16">
-        <motion.div
-          initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="text-center mb-10"
-        >
-          <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#00b97a] mb-3 block">Testimonials</span>
-          <h2 className="text-3xl md:text-4xl font-bold">Trusted by Traders Worldwide</h2>
-        </motion.div>
-        <div className="grid md:grid-cols-3 gap-4">
-          {testimonials.map((t, i) => <Testimonial key={t.name} {...t} delay={i * 0.08} />)}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section id="faq" className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl md:text-4xl font-bold mb-8">Frequently asked questions</h2>
-        <Accordion type="single" collapsible className="max-w-3xl bg-[#11161e] border border-white/5 rounded-2xl px-6">
-          {[
-            { q: 'How do I get started on NEOTRADE?', a: 'Open a free demo account with $10,000 virtual funds and practice with the same engine that powers live markets — no risk, no time limit.' },
-            { q: 'How long do withdrawals take?', a: 'Crypto withdrawals are typically processed within minutes. Card and bank withdrawals settle within 1–3 business days.' },
-            { q: 'What is a binary options trading platform?', a: 'A binary options platform lets you predict whether an asset price will go UP or DOWN within a fixed expiry. If you are right at expiry, you receive a fixed payout.' },
-            { q: 'Can I trade on my phone?', a: 'Yes — NEOTRADE is fully responsive and works perfectly on mobile browsers without any install.' },
-            { q: 'What is the minimum deposit?', a: 'The minimum deposit is $10 and the minimum trade size is $1 — start small and scale as you build confidence.' },
-            { q: 'Are there any deposit or withdrawal fees?', a: 'No. NEOTRADE charges 0% fees on deposits and withdrawals — what you fund is what you trade.' },
-          ].map((it, i) => (
-            <AccordionItem key={i} value={`f${i}`} className="border-white/5">
-              <AccordionTrigger className="text-left text-white hover:text-[#00b97a]" data-testid={`faq-trigger-${i}`}>{it.q}</AccordionTrigger>
-              <AccordionContent className="text-white/60">{it.a}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </section>
-
-      {/* CTA */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="rounded-3xl bg-gradient-to-r from-[#11161e] to-[#0a0d12] border border-white/5 p-10 md:p-16 text-center relative overflow-hidden">
-          <div className="absolute inset-0 qx-bg-grid opacity-20" />
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-4 relative">
-            Ready to Trade with{' '}
-            <span className="bg-gradient-to-r from-[#22d3ee] via-[#00e692] to-[#00b97a] bg-clip-text text-transparent">NEOTRADE</span>?
-          </h2>
-          <p className="text-white/60 mb-8 relative max-w-2xl mx-auto">
-            Join thousands of traders already profiting on NEOTRADE. Start with a free demo account today.
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center relative">
-            <Button size="lg" className="bg-[#00b97a] hover:bg-[#00a86d] text-white font-bold text-base px-8 h-14" onClick={() => router.push('/signup')} data-testid="cta-final-signup">
-              Create Free Account <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-            <Button size="lg" variant="outline" className="bg-white text-[#0c1015] hover:bg-white/90 border-0 font-bold text-base px-8 h-14" onClick={() => router.push('/login')} data-testid="cta-final-login">
-              I already have an account
-            </Button>
+            <div>
+              <h4 className="font-semibold text-white mb-4">Trading</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><Link href="/signup" className="hover:text-white transition-colors">Binary Options</Link></li>
+                <li><Link href="/signup" className="hover:text-white transition-colors">Touch/No Touch</Link></li>
+                <li><Link href="/signup" className="hover:text-white transition-colors">Tournaments</Link></li>
+                <li><Link href="/signup" className="hover:text-white transition-colors">Affiliate</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-4">Support</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><Link href="/support" className="hover:text-white transition-colors">Help Center</Link></li>
+                <li><Link href="/support" className="hover:text-white transition-colors">Contact Us</Link></li>
+                <li><Link href="/support" className="hover:text-white transition-colors">FAQ</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Risk Disclosure</a></li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
 
-      <footer className="border-t border-white/5 py-12 mt-6" id="about">
-        <div className="container mx-auto px-4 grid md:grid-cols-4 gap-8 text-sm">
-          <div>
-            <QuotexLogo />
-            <p className="text-white/40 mt-4 text-xs leading-relaxed">
-              NEOTRADE — AI-powered binary options platform with real-time market data and professional tools.
-            </p>
-            <p className="text-white/30 mt-4 text-[11px] leading-relaxed">
-              <span className="text-[#ff5e5e]">Risk Warning:</span> Trading carries a high level of risk and may not be suitable for all investors. Only trade with funds you can afford to lose.
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-gray-500">© 2026 NEOTRADE Trading. All rights reserved.</p>
+            <p className="text-xs text-gray-600 max-w-xl text-center md:text-right">
+              <span className="text-sell">Risk Warning:</span> Binary options trading involves substantial risk and may not be suitable for all investors.
             </p>
           </div>
-          <div>
-            <div className="font-semibold mb-3 text-white">Trading</div>
-            <ul className="space-y-2 text-white/50">
-              <li><Link href="/login" className="hover:text-white">Binary Options</Link></li>
-              <li><Link href="/login" className="hover:text-white">OTC Markets</Link></li>
-              <li><Link href="/login" className="hover:text-white">Live Candles</Link></li>
-              <li><Link href="/signup" className="hover:text-white">Affiliate Program</Link></li>
-            </ul>
-          </div>
-          <div>
-            <div className="font-semibold mb-3 text-white">Support</div>
-            <ul className="space-y-2 text-white/50">
-              <li><Link href="/support" className="hover:text-white">Help Center</Link></li>
-              <li><Link href="/support" className="hover:text-white">Contact Us</Link></li>
-              <li><a href="#faq" className="hover:text-white">FAQ</a></li>
-            </ul>
-          </div>
-          <div>
-            <div className="font-semibold mb-3 text-white">Legal</div>
-            <ul className="space-y-2 text-white/50">
-              <li><a href="#" className="hover:text-white">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white">Risk Disclosure</a></li>
-            </ul>
-          </div>
-        </div>
-        <div className="container mx-auto px-4 mt-8 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-white/40">
-          <p>© 2026 NEOTRADE. All rights reserved.</p>
-          <p>Powered by next-generation trading infrastructure.</p>
         </div>
       </footer>
     </div>

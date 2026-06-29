@@ -16,6 +16,16 @@
       "static/chunks/main-app.js",
       "static/chunks/app/login/page.js"
     ],
+    "/signup/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/signup/page.js"
+    ],
+    "/reset-password/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/reset-password/page.js"
+    ],
     "/trade/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
