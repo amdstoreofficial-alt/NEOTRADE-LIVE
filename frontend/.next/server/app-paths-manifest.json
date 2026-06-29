@@ -1,6 +1,7 @@
 {
   "/api/[[...path]]/route": "app/api/[[...path]]/route.js",
-  "/login/page": "app/login/page.js",
   "/trade/page": "app/trade/page.js",
-  "/admin/page": "app/admin/page.js"
+  "/manifest.webmanifest/route": "app/manifest.webmanifest/route.js",
+  "/admin/page": "app/admin/page.js",
+  "/icon.svg/route": "app/icon.svg/route.js"
 }
