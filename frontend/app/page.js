@@ -470,9 +470,9 @@ export default function NeotradeLanding() {
             <div>
               <h4 className="font-semibold text-white mb-4">Legal</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Risk Disclosure</a></li>
+                <li><a href="/legal/terms" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="/legal/privacy" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="/legal/risk" className="hover:text-white transition-colors">Risk Disclosure</a></li>
               </ul>
             </div>
           </div>

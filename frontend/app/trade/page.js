@@ -53,7 +53,7 @@ export default function TradeTerminal() {
   const [asset, setAsset] = useState('XAUUSD');
   const [interval, setInterval_] = useState(5);
   const [decimals, setDecimals] = useState(3);
-  const [payoutPct, setPayoutPct] = useState(0.85);
+  const [payoutPct, setPayoutPct] = useState(0.95); // Hardcoded to 95% on user dashboard (admin-side multiplier ignored on display)
   const [livePrice, setLivePrice] = useState(null);
   const [candles, setCandles] = useState([]);
   const [support, setSupport] = useState(null);
@@ -175,7 +175,7 @@ export default function TradeTerminal() {
         if (!stop) {
           setCandles(r.candles || []);
           setDecimals(r.decimals);
-          setPayoutPct(r.payout);
+          // payoutPct intentionally NOT updated from server — user dashboard is hardcoded to 95%
           if (r.support) setSupport(r.support);
           if (r.resistance) setResistance(r.resistance);
         }
@@ -319,24 +319,25 @@ export default function TradeTerminal() {
   // through as props keeps a stable component identity.
 
   // ---------- Trade form (time + amount + up/down) — shared ----------
-  const TradeForm = ({ compact }) => (
-    <div className={compact ? '' : 'p-4 border-b border-white/5'}>
-      {!compact && (
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <div className="text-xs text-white/40 flex items-center gap-1">
-              Asset
-              {currentAsset?.kind === 'live' ? (
-                <span className="px-1 py-0.5 bg-[#ff5555]/20 text-[#ff5555] text-[8px] font-bold rounded animate-pulse">LIVE</span>
-              ) : (
-                <span className="px-1 py-0.5 bg-[#00b97a]/15 text-[#00b97a] text-[8px] font-bold rounded">OTC</span>
-              )}
-            </div>
-            <div className="text-lg font-bold">{currentAsset?.display || asset}</div>
+  // ──── Desktop right-panel trade form JSX (kept as a stable JSX block, not a
+  //     closure-defined component, to prevent React from re-mounting it on
+  //     every 350ms candle re-render which was causing first-click drops.) ────
+  const tradeFormJsx = (
+    <div className="p-4 border-b border-white/5">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <div className="text-xs text-white/40 flex items-center gap-1">
+            Asset
+            {currentAsset?.kind === 'live' ? (
+              <span className="px-1 py-0.5 bg-[#ff5555]/20 text-[#ff5555] text-[8px] font-bold rounded animate-pulse">LIVE</span>
+            ) : (
+              <span className="px-1 py-0.5 bg-[#00b97a]/15 text-[#00b97a] text-[8px] font-bold rounded">OTC</span>
+            )}
           </div>
-          <div className="text-[#f0b90b] font-bold text-lg">{Math.round(payoutPct * 100)}%</div>
+          <div className="text-lg font-bold">{currentAsset?.display || asset}</div>
         </div>
-      )}
+        <div className="text-[#f0b90b] font-bold text-lg">{Math.round(payoutPct * 100)}%</div>
+      </div>
 
       <div className="bg-[#11161e] rounded-lg p-3 border border-white/5 mb-3">
         <div className="text-[10px] uppercase text-white/40 mb-1.5">Time</div>
@@ -349,7 +350,6 @@ export default function TradeTerminal() {
             inputMode="numeric"
             value={`${Math.floor(duration / 60).toString().padStart(2, '0')}:${(duration % 60).toString().padStart(2, '0')}`}
             onChange={e => {
-              // Accept "mm:ss" or raw seconds typed in. Clamp 5s..30min.
               const raw = e.target.value.replace(/[^0-9:]/g, '');
               let secs;
               if (raw.includes(':')) {
@@ -359,7 +359,7 @@ export default function TradeTerminal() {
                 secs = parseInt(raw, 10) || 0;
               }
               if (secs < 1) secs = 1;
-              if (secs > 1800) secs = 1800; // cap at 30 min
+              if (secs > 1800) secs = 1800;
               setDuration(secs);
             }}
             onBlur={() => { if (duration < 5) setDuration(5); }}
@@ -391,9 +391,6 @@ export default function TradeTerminal() {
             min={1}
             value={amount}
             onChange={e => {
-              // Allow empty / 0 transiently so the user can type freely
-              // (e.g. clear the field and type 250). We only clamp on blur
-              // and again at trade submission time.
               const v = e.target.value;
               setAmount(v === '' ? '' : Number(v));
             }}
@@ -418,10 +415,10 @@ export default function TradeTerminal() {
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <Button onClick={() => { placeTrade('up'); setMobilePanelOpen(false); }} className="h-12 bg-[#00b97a] hover:bg-[#00a86d] font-bold text-base glow-pulse-green transition-transform active:scale-95">
+        <Button onClick={() => { placeTrade('up'); setMobilePanelOpen(false); }} className="h-12 bg-[#00b97a] hover:bg-[#00a86d] font-bold text-base glow-pulse-green transition-transform active:scale-95" data-testid="up-btn">
           Up <TrendingUp className="w-4 h-4 ml-1" />
         </Button>
-        <Button onClick={() => { placeTrade('down'); setMobilePanelOpen(false); }} className="h-12 bg-[#ff5555] hover:bg-[#ee4444] font-bold text-base glow-pulse-red transition-transform active:scale-95">
+        <Button onClick={() => { placeTrade('down'); setMobilePanelOpen(false); }} className="h-12 bg-[#ff5555] hover:bg-[#ee4444] font-bold text-base glow-pulse-red transition-transform active:scale-95" data-testid="down-btn">
           Down <TrendingDown className="w-4 h-4 ml-1" />
         </Button>
       </div>
@@ -698,7 +695,7 @@ export default function TradeTerminal() {
 
         {/* Desktop right panel */}
         <aside className="hidden md:flex w-80 border-l border-white/5 bg-[#0a0d12] flex-col">
-          <TradeForm />
+          {tradeFormJsx}
 
           {/* All active trades — each gets its own card so traders can see and
               track multiple simultaneous positions. The card index (#1, #2,

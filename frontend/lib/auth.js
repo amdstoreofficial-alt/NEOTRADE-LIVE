@@ -42,11 +42,43 @@ export async function ensureSeedUsers() {
   const users = db.collection('users');
   const settings = db.collection('settings');
 
-  const existingAdmin = await users.findOne({ email: 'admin@trading.com' });
+  // ──── Clean up orphan rows (e.g. legacy NeoTrade FastAPI seeds with no
+  //     passwordHash). Without this, the migration below would skip because
+  //     it sees a "user" with the new email already present.
+  await users.deleteMany({
+    email: { $in: ['admin@neotrade.live', 'masteruser@neotrade.live'] },
+    $or: [
+      { passwordHash: { $exists: false } },
+      { passwordHash: null },
+      { passwordHash: '' },
+    ],
+  });
+
+  // ──── Migration: rename legacy *@trading.com seeds to *@neotrade.live ────
+  // Preserves wallet balances, trade history, and user id. Idempotent.
+  const legacyAdmin = await users.findOne({ email: 'admin@trading.com' });
+  if (legacyAdmin) {
+    await users.updateOne(
+      { _id: legacyAdmin._id },
+      { $set: { email: 'admin@neotrade.live', name: 'Administrator' } }
+    );
+  }
+  const legacyMaster = await users.findOne({ email: 'masteruser@trading.com' });
+  if (legacyMaster) {
+    await users.updateOne(
+      { _id: legacyMaster._id },
+      { $set: { email: 'masteruser@neotrade.live', name: 'Master User' } }
+    );
+  }
+  // Also remove the FastAPI-era 'masteruser@gmail.com' orphan if it has no passwordHash
+  await users.deleteOne({ email: 'masteruser@gmail.com', passwordHash: { $exists: false } });
+
+  // ──── Seed admin@neotrade.live ────
+  const existingAdmin = await users.findOne({ email: 'admin@neotrade.live' });
   if (!existingAdmin) {
     await users.insertOne({
       id: uuidv4(),
-      email: 'admin@trading.com',
+      email: 'admin@neotrade.live',
       passwordHash: await bcrypt.hash('password', 8),
       name: 'Administrator',
       role: 'admin',
@@ -57,11 +89,12 @@ export async function ensureSeedUsers() {
     });
   }
 
-  const existingMaster = await users.findOne({ email: 'masteruser@trading.com' });
+  // ──── Seed masteruser@neotrade.live ────
+  const existingMaster = await users.findOne({ email: 'masteruser@neotrade.live' });
   if (!existingMaster) {
     await users.insertOne({
       id: uuidv4(),
-      email: 'masteruser@trading.com',
+      email: 'masteruser@neotrade.live',
       passwordHash: await bcrypt.hash('password', 8),
       name: 'Master User',
       role: 'user',

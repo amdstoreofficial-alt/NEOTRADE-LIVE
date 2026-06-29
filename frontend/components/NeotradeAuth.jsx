@@ -405,7 +405,7 @@ export default function NeotradeAuth({ initialMode = 'login' }) {
                       </div>
                     </div>
                     <span className="text-xs text-gray-400 leading-relaxed">
-                      I agree to the <a href="#" className="text-electric hover:text-neon">Terms of Service</a>, <a href="#" className="text-electric hover:text-neon">Privacy Policy</a>, and <a href="#" className="text-electric hover:text-neon">Risk Disclosure</a>.
+                      I agree to the <a href="/legal/terms" className="text-electric hover:text-neon">Terms of Service</a>, <a href="/legal/privacy" className="text-electric hover:text-neon">Privacy Policy</a>, and <a href="/legal/risk" className="text-electric hover:text-neon">Risk Disclosure</a>.
                     </span>
                   </label>
                 </motion.div>
