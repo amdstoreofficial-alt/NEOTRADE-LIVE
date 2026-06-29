@@ -49,6 +49,30 @@ function json(data, status = 200) {
   return NextResponse.json(data, { status });
 }
 
+// ──── Admin-configured global payout (cached for 2s) ────
+// Every asset's user-facing payout % is derived from the admin's
+// `settings.payoutRate` (e.g. 1.50x → 0.50 → 50%). This decouples the
+// hardcoded per-asset payouts in priceEngine.js / liveAssetsConfig.js
+// from what the user dashboard displays so any admin change propagates
+// across all symbols at once.
+let __payoutCache = { value: null, expires: 0 };
+async function getGlobalPayout() {
+  const now = Date.now();
+  if (__payoutCache.value !== null && __payoutCache.expires > now) {
+    return __payoutCache.value;
+  }
+  try {
+    const db = await getDb();
+    const s = await db.collection('settings').findOne({ id: 'global' });
+    const rate = Number(s?.payoutRate);
+    const payout = Number.isFinite(rate) && rate > 1 ? +(rate - 1).toFixed(4) : 0.8;
+    __payoutCache = { value: payout, expires: now + 2000 };
+    return payout;
+  } catch (_) {
+    return __payoutCache.value !== null ? __payoutCache.value : 0.8;
+  }
+}
+
 function publicUser(u) {
   if (!u) return null;
   return {
@@ -348,14 +372,16 @@ async function handler(req, { params }) {
 
     // ----- MARKET DATA -----
     if (route === 'assets' && method === 'GET') {
-      return json({ assets: getAssets() });
+      const payout = await getGlobalPayout();
+      return json({ assets: getAssets().map(a => ({ ...a, payout })) });
     }
 
     if (segments[0] === 'price' && segments[1] && method === 'GET') {
       const sym = segments[1];
       const a = getAsset(sym);
       if (!a) return json({ error: 'unknown asset' }, 404);
-      return json({ symbol: sym, price: a.price, decimals: a.decimals, payout: a.payout, t: Date.now() });
+      const payout = await getGlobalPayout();
+      return json({ symbol: sym, price: a.price, decimals: a.decimals, payout, t: Date.now() });
     }
 
     if (segments[0] === 'candles' && segments[1] && method === 'GET') {
@@ -365,7 +391,8 @@ async function handler(req, { params }) {
       const a = getAsset(sym);
       if (!a) return json({ error: 'unknown asset' }, 404);
       const candles = getCandles(sym, interval);
-      return json({ symbol: sym, interval, decimals: a.decimals, payout: a.payout, candles, support: a.support, resistance: a.resistance, kind: a.kind });
+      const payout = await getGlobalPayout();
+      return json({ symbol: sym, interval, decimals: a.decimals, payout, candles, support: a.support, resistance: a.resistance, kind: a.kind });
     }
 
     // ----- REAL-TIME PRICE STREAM (Server-Sent Events) -----
@@ -387,8 +414,10 @@ async function handler(req, { params }) {
               controller.enqueue(encoder.encode(`data: ${JSON.stringify(obj)}\n\n`));
             } catch (e) { alive = false; }
           };
-          // Initial snapshot
-          send({ type: 'snapshot', symbol: sym, price: a.price, decimals: a.decimals, payout: a.payout, kind: a.kind, t: Date.now() });
+          // Initial snapshot — payout overridden with admin's global rate.
+          getGlobalPayout().then(payout => {
+            send({ type: 'snapshot', symbol: sym, price: a.price, decimals: a.decimals, payout, kind: a.kind, t: Date.now() });
+          });
           // Keep-alive ping (also flushes any buffered proxy)
           pingTimer = setInterval(() => send({ type: 'ping', t: Date.now() }), 15000);
           // Subscribe to engine ticks

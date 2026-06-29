@@ -1,6 +1,6 @@
 {
   "/api/[[...path]]/route": "app/api/[[...path]]/route.js",
-  "/trade/page": "app/trade/page.js",
+  "/admin/page": "app/admin/page.js",
   "/login/page": "app/login/page.js",
-  "/admin/page": "app/admin/page.js"
+  "/trade/page": "app/trade/page.js"
 }
