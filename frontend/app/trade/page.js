@@ -331,9 +331,9 @@ export default function TradeTerminal() {
           <div className="text-xs text-white/40 flex items-center gap-1">
             Asset
             {currentAsset?.kind === 'live' ? (
-              <span className="px-1 py-0.5 bg-[#ff5555]/20 text-[#ff5555] text-[8px] font-bold rounded animate-pulse">LIVE</span>
+              <span className="px-1 py-0.5 bg-[#E53935]/20 text-[#E53935] text-[8px] font-bold rounded animate-pulse">LIVE</span>
             ) : (
-              <span className="px-1 py-0.5 bg-[#00b97a]/15 text-[#00b97a] text-[8px] font-bold rounded">OTC</span>
+              <span className="px-1 py-0.5 bg-[#8B5CF6]/15 text-[#00b97a] text-[8px] font-bold rounded">OTC</span>
             )}
           </div>
           <div className="text-lg font-bold">{currentAsset?.display || asset}</div>
@@ -366,7 +366,7 @@ export default function TradeTerminal() {
             }}
             onBlur={() => { if (duration < 5) setDuration(5); }}
             data-testid="time-input"
-            className="font-mono text-lg font-bold bg-transparent text-center w-20 outline-none focus:text-[#00b97a] caret-[#00b97a]"
+            className="font-mono text-lg font-bold bg-transparent text-center w-20 outline-none focus:text-[#00b97a] caret-[#8B5CF6]"
           />
           <button onClick={() => { const i = DURATIONS.findIndex(d => d.v === duration); if (i < DURATIONS.length - 1) setDuration(DURATIONS[i + 1].v); }} className="w-8 h-8 rounded-md bg-white/5 hover:bg-white/10 flex items-center justify-center" data-testid="time-plus-btn">
             <Plus className="w-4 h-4" />
@@ -374,7 +374,7 @@ export default function TradeTerminal() {
         </div>
         <div className="flex gap-1 mt-2">
           {DURATIONS.map(d => (
-            <button key={d.v} onClick={() => setDuration(d.v)} className={`flex-1 text-[10px] py-1 rounded ${duration === d.v ? 'bg-[#00b97a] text-white' : 'bg-white/5 text-white/50 hover:text-white'}`} data-testid={`time-preset-${d.v}`}>
+            <button key={d.v} onClick={() => setDuration(d.v)} className={`flex-1 text-[10px] py-1 rounded ${duration === d.v ? 'bg-[#8B5CF6] text-white' : 'bg-white/5 text-white/50 hover:text-white'}`} data-testid={`time-preset-${d.v}`}>
               {d.l}
             </button>
           ))}
@@ -417,10 +417,10 @@ export default function TradeTerminal() {
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <Button onClick={() => { placeTrade('up'); setMobilePanelOpen(false); }} className="h-12 bg-[#00b97a] hover:bg-[#00a86d] font-bold text-base glow-pulse-green transition-transform active:scale-95" data-testid="up-btn">
+        <Button onClick={() => { placeTrade('up'); setMobilePanelOpen(false); }} className="h-12 bg-[#8B5CF6] hover:bg-[#7C3AED] font-bold text-base glow-pulse-green transition-transform active:scale-95" data-testid="up-btn">
           Up <TrendingUp className="w-4 h-4 ml-1" />
         </Button>
-        <Button onClick={() => { placeTrade('down'); setMobilePanelOpen(false); }} className="h-12 bg-[#ff5555] hover:bg-[#ee4444] font-bold text-base glow-pulse-red transition-transform active:scale-95" data-testid="down-btn">
+        <Button onClick={() => { placeTrade('down'); setMobilePanelOpen(false); }} className="h-12 bg-[#E53935] hover:bg-[#F44336] font-bold text-base glow-pulse-red transition-transform active:scale-95" data-testid="down-btn">
           Down <TrendingDown className="w-4 h-4 ml-1" />
         </Button>
       </div>
@@ -442,7 +442,7 @@ export default function TradeTerminal() {
             onOpenDeposit={() => setDepositOpen(true)}
             onOpenWithdrawal={() => setWithdrawOpen(true)}
           />
-          <Button onClick={() => setDepositOpen(true)} className="bg-[#00b97a] hover:bg-[#00a86d] font-semibold h-9">
+          <Button onClick={() => setDepositOpen(true)} className="bg-[#8B5CF6] hover:bg-[#7C3AED] font-semibold h-9">
             <Plus className="w-4 h-4 mr-1" /> Deposit
           </Button>
           <Button onClick={() => setWithdrawOpen(true)} variant="ghost" className="bg-white/5 hover:bg-white/10 h-9">Withdrawal</Button>
@@ -464,7 +464,7 @@ export default function TradeTerminal() {
           />
         </div>
         <div className="flex items-center gap-1">
-          <button onClick={() => setDepositOpen(true)} className="h-8 px-3 bg-[#00b97a] hover:bg-[#00a86d] text-white text-xs font-bold rounded-md flex items-center">
+          <button onClick={() => setDepositOpen(true)} className="h-8 px-3 bg-[#8B5CF6] hover:bg-[#7C3AED] text-white text-xs font-bold rounded-md flex items-center">
             <Plus className="w-3.5 h-3.5 mr-0.5" /> Deposit
           </button>
         </div>
@@ -498,9 +498,9 @@ export default function TradeTerminal() {
                     <div className="flex items-center gap-2">
                       <div className="text-sm font-bold">{currentAsset?.display || asset}</div>
                       {currentAsset?.kind === 'live' ? (
-                        <span className="px-1 py-0.5 bg-[#ff5555]/20 text-[#ff5555] text-[9px] font-bold rounded uppercase animate-pulse">LIVE</span>
+                        <span className="px-1 py-0.5 bg-[#E53935]/20 text-[#E53935] text-[9px] font-bold rounded uppercase animate-pulse">LIVE</span>
                       ) : (
-                        <span className="px-1 py-0.5 bg-[#00b97a]/15 text-[#00b97a] text-[9px] font-bold rounded uppercase">OTC</span>
+                        <span className="px-1 py-0.5 bg-[#8B5CF6]/15 text-[#00b97a] text-[9px] font-bold rounded uppercase">OTC</span>
                       )}
                     </div>
                     <div className="text-[10px] text-[#f0b90b] font-bold">{Math.round(payoutPct * 100)}% payout</div>
@@ -522,7 +522,7 @@ export default function TradeTerminal() {
 
             <div className="flex items-center gap-0.5 bg-[#11161e] border border-white/10 rounded-lg p-0.5 md:p-1">
               {INTERVALS.map(it => (
-                <button key={it.v} onClick={() => setInterval_(it.v)} className={`px-2 md:px-3 py-1 text-[10px] md:text-xs rounded font-semibold ${interval === it.v ? 'bg-[#00b97a] text-white' : 'text-white/50 hover:text-white'}`}>
+                <button key={it.v} onClick={() => setInterval_(it.v)} className={`px-2 md:px-3 py-1 text-[10px] md:text-xs rounded font-semibold ${interval === it.v ? 'bg-[#8B5CF6] text-white' : 'text-white/50 hover:text-white'}`}>
                   {it.l}
                 </button>
               ))}
@@ -577,7 +577,7 @@ export default function TradeTerminal() {
                 onClick={() => setToolsOpen(v => !v)}
                 title={toolsOpen ? 'Hide drawing tools' : 'Show drawing tools'}
                 className={`w-9 h-9 rounded-lg flex items-center justify-center shadow-xl border ${
-                  toolsOpen ? 'bg-[#1a8eff] border-[#1a8eff] text-white' : 'bg-[#11161e] border-white/10 text-white/70 hover:text-white hover:bg-[#161c26]'
+                  toolsOpen ? 'bg-[#22D3EE] border-[#22D3EE] text-white' : 'bg-[#11161e] border-white/10 text-white/70 hover:text-white hover:bg-[#161c26]'
                 }`}
               >
                 <Pencil className="w-4 h-4" />
@@ -592,14 +592,14 @@ export default function TradeTerminal() {
             <button onClick={() => setMobileAssetsOpen(true)}
                     className="w-full flex items-center justify-between px-3 py-2 border-b border-white/5 active:bg-white/5">
               <div className="flex items-center gap-2">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${currentAsset?.kind === 'live' ? 'bg-[#ff5555]/20 text-[#ff5555]' : 'bg-[#f0b90b]/20 text-[#f0b90b]'}`}>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${currentAsset?.kind === 'live' ? 'bg-[#E53935]/20 text-[#E53935]' : 'bg-[#f0b90b]/20 text-[#f0b90b]'}`}>
                   {currentAsset?.display?.[0] || 'A'}
                 </div>
                 <div className="text-sm font-bold">{currentAsset?.display || asset}</div>
                 {currentAsset?.kind === 'live' ? (
-                  <span className="px-1 py-0.5 bg-[#ff5555]/20 text-[#ff5555] text-[9px] font-bold rounded uppercase animate-pulse">LIVE</span>
+                  <span className="px-1 py-0.5 bg-[#E53935]/20 text-[#E53935] text-[9px] font-bold rounded uppercase animate-pulse">LIVE</span>
                 ) : (
-                  <span className="px-1 py-0.5 bg-[#00b97a]/15 text-[#00b97a] text-[9px] font-bold rounded uppercase">OTC</span>
+                  <span className="px-1 py-0.5 bg-[#8B5CF6]/15 text-[#00b97a] text-[9px] font-bold rounded uppercase">OTC</span>
                 )}
                 <span className="text-[#f0b90b] font-bold text-sm">{Math.round(payoutPct * 100)}%</span>
                 <ChevronDown className="w-4 h-4 text-white/40" />
@@ -633,7 +633,7 @@ export default function TradeTerminal() {
                     }}
                     onBlur={() => { if (duration < 5) setDuration(5); }}
                     data-testid="mobile-time-input"
-                    className="font-mono text-base font-bold bg-transparent text-center w-24 outline-none focus:text-[#00b97a] caret-[#00b97a]"
+                    className="font-mono text-base font-bold bg-transparent text-center w-24 outline-none focus:text-[#00b97a] caret-[#8B5CF6]"
                   />
                   <button onClick={() => { const i = DURATIONS.findIndex(d => d.v === duration); if (i < DURATIONS.length - 1) setDuration(DURATIONS[i + 1].v); }} className="w-6 h-6 rounded-full bg-white/5 active:bg-white/10 flex items-center justify-center">
                     <Plus className="w-3.5 h-3.5" />
@@ -659,7 +659,7 @@ export default function TradeTerminal() {
                       }}
                       onBlur={() => { const n = Number(amount); setAmount(Number.isFinite(n) && n >= 1 ? n : 1); }}
                       data-testid="mobile-amount-input"
-                      className="font-bold text-base bg-transparent text-center w-14 outline-none focus:text-[#00b97a] caret-[#00b97a]"
+                      className="font-bold text-base bg-transparent text-center w-14 outline-none focus:text-[#00b97a] caret-[#8B5CF6]"
                     />
                     <span className="text-base font-bold">$</span>
                   </div>
@@ -679,13 +679,13 @@ export default function TradeTerminal() {
 
             {/* Up / Down */}
             <div className="grid grid-cols-2 gap-2 px-3 pb-2">
-              <button onClick={() => placeTrade('up')} className="h-11 rounded-lg bg-[#00b97a] hover:bg-[#00a86d] active:scale-[0.97] font-bold text-sm flex items-center justify-between px-4 transition glow-pulse-green">
+              <button onClick={() => placeTrade('up')} className="h-11 rounded-lg bg-[#8B5CF6] hover:bg-[#7C3AED] active:scale-[0.97] font-bold text-sm flex items-center justify-between px-4 transition glow-pulse-green">
                 <span>Up</span>
                 <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
                   <TrendingUp className="w-3.5 h-3.5" />
                 </span>
               </button>
-              <button onClick={() => placeTrade('down')} className="h-11 rounded-lg bg-[#ff5555] hover:bg-[#ee4444] active:scale-[0.97] font-bold text-sm flex items-center justify-between px-4 transition glow-pulse-red">
+              <button onClick={() => placeTrade('down')} className="h-11 rounded-lg bg-[#E53935] hover:bg-[#F44336] active:scale-[0.97] font-bold text-sm flex items-center justify-between px-4 transition glow-pulse-red">
                 <span>Down</span>
                 <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
                   <TrendingDown className="w-3.5 h-3.5" />
@@ -783,11 +783,11 @@ export default function TradeTerminal() {
               { icon: LifeBuoy, label: 'Support', badge: supportUnread, onClick: () => { setMobileMenuOpen(false); router.push('/support'); } },
               { icon: Settings, label: 'Settings', onClick: () => { setMobileMenuOpen(false); setSettingsOpen(true); } },
             ].map((it, i) => (
-              <button key={i} onClick={it.onClick} className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm ${it.active ? 'bg-[#00b97a]/15 text-[#00b97a]' : 'text-white/70 hover:bg-white/5'}`}>
+              <button key={i} onClick={it.onClick} className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm ${it.active ? 'bg-[#8B5CF6]/15 text-[#00b97a]' : 'text-white/70 hover:bg-white/5'}`}>
                 <it.icon className="w-4 h-4" />
                 <span className="flex-1 text-left">{it.label}</span>
                 {it.badge > 0 && (
-                  <span className="px-1.5 h-4 min-w-[16px] rounded-full bg-[#ff5555] text-white text-[10px] font-bold flex items-center justify-center">
+                  <span className="px-1.5 h-4 min-w-[16px] rounded-full bg-[#E53935] text-white text-[10px] font-bold flex items-center justify-center">
                     {it.badge > 99 ? '99+' : it.badge}
                   </span>
                 )}
@@ -810,18 +810,18 @@ export default function TradeTerminal() {
             style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}
           >
             <div className={`rounded-xl border bg-[#11161e]/95 backdrop-blur-md shadow-2xl overflow-hidden ${
-              outcomePopup.outcome === 'win' ? 'border-[#00b97a]/50 shadow-[#00b97a]/20' : 'border-[#ff5555]/50 shadow-[#ff5555]/20'
+              outcomePopup.outcome === 'win' ? 'border-[#8B5CF6]/50 shadow-[#8B5CF6]/20' : 'border-[#E53935]/50 shadow-[#E53935]/20'
             }`}>
-              <div className={`h-0.5 ${outcomePopup.outcome === 'win' ? 'bg-gradient-to-r from-[#00b97a] via-[#22d3ee] to-[#00b97a]' : 'bg-gradient-to-r from-[#ff5555] via-[#f0b90b] to-[#ff5555]'} animate-pulse`} />
+              <div className={`h-0.5 ${outcomePopup.outcome === 'win' ? 'bg-gradient-to-r from-[#8B5CF6] via-[#22d3ee] to-[#8B5CF6]' : 'bg-gradient-to-r from-[#E53935] via-[#f0b90b] to-[#E53935]'} animate-pulse`} />
               <div className="p-3 flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${outcomePopup.outcome === 'win' ? 'bg-[#00b97a]/20 text-[#00b97a]' : 'bg-[#ff5555]/20 text-[#ff5555]'}`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${outcomePopup.outcome === 'win' ? 'bg-[#8B5CF6]/20 text-[#00b97a]' : 'bg-[#E53935]/20 text-[#E53935]'}`}>
                   {outcomePopup.outcome === 'win' ? <Check className="w-5 h-5" strokeWidth={3} /> : <X className="w-5 h-5" strokeWidth={3} />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-[10px] uppercase tracking-wider text-white/40 leading-none">
                     {outcomePopup.outcome === 'win' ? 'You won' : 'You lost'}
                   </div>
-                  <div className={`text-lg font-extrabold leading-tight ${outcomePopup.outcome === 'win' ? 'text-[#00b97a]' : 'text-[#ff5555]'}`}>
+                  <div className={`text-lg font-extrabold leading-tight ${outcomePopup.outcome === 'win' ? 'text-[#00b97a]' : 'text-[#E53935]'}`}>
                     {outcomePopup.outcome === 'win' ? '+' : ''}${outcomePopup.pnl?.toFixed(2)}
                   </div>
                   <div className="text-[10px] text-white/50 truncate">
@@ -853,18 +853,18 @@ export default function TradeTerminal() {
 
       {/* ===================== Admin Announcement popup ===================== */}
       <Dialog open={!!announcement} onOpenChange={(o) => !o && dismissAnnouncement()}>
-        <DialogContent className="bg-[#0a0d12] border border-[#1a8eff]/40 max-w-md p-0 overflow-hidden">
+        <DialogContent className="bg-[#0a0d12] border border-[#22D3EE]/40 max-w-md p-0 overflow-hidden">
           <DialogTitle className="sr-only">Announcement</DialogTitle>
           {announcement && (
             <div>
-              <div className="h-1 bg-gradient-to-r from-[#1a8eff] via-[#22d3ee] to-[#00b97a] animate-pulse" />
+              <div className="h-1 bg-gradient-to-r from-[#22D3EE] via-[#22d3ee] to-[#8B5CF6] animate-pulse" />
               <div className="p-5">
                 <div className="flex items-start gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-[#1a8eff]/15 flex items-center justify-center shrink-0">
-                    <Megaphone className="w-5 h-5 text-[#1a8eff]" />
+                  <div className="w-10 h-10 rounded-full bg-[#22D3EE]/15 flex items-center justify-center shrink-0">
+                    <Megaphone className="w-5 h-5 text-[#22D3EE]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-[10px] uppercase tracking-wider text-[#1a8eff] font-bold">Announcement</div>
+                    <div className="text-[10px] uppercase tracking-wider text-[#22D3EE] font-bold">Announcement</div>
                     <h3 className="text-base font-bold mt-0.5">{announcement.title}</h3>
                   </div>
                 </div>
@@ -876,7 +876,7 @@ export default function TradeTerminal() {
                     Active until {new Date(announcement.expiresAt).toLocaleString()}
                   </div>
                 )}
-                <Button onClick={dismissAnnouncement} className="w-full bg-[#1a8eff] hover:bg-[#1278e6] font-bold">
+                <Button onClick={dismissAnnouncement} className="w-full bg-[#22D3EE] hover:bg-[#0891B2] font-bold">
                   Got it
                 </Button>
               </div>
@@ -900,7 +900,7 @@ export default function TradeTerminal() {
               <div key={t.id} className="bg-[#11161e] border border-white/5 rounded-lg p-3 text-xs">
                 <div className="flex justify-between mb-1">
                   <span className="font-bold">{t.asset}</span>
-                  <span className={`font-bold ${t.outcome === 'win' ? 'text-[#00b97a]' : 'text-[#ff5555]'}`}>{t.outcome?.toUpperCase()} {t.outcome === 'win' ? '+' : ''}${t.pnl?.toFixed(2)}</span>
+                  <span className={`font-bold ${t.outcome === 'win' ? 'text-[#00b97a]' : 'text-[#E53935]'}`}>{t.outcome?.toUpperCase()} {t.outcome === 'win' ? '+' : ''}${t.pnl?.toFixed(2)}</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-white/50">
                   <div>{t.direction === 'up' ? '▲ UP' : '▼ DOWN'}</div>
@@ -985,14 +985,14 @@ function RailBtn({ icon: Icon, label, active, onClick, badge }) {
       onClick={onClick}
       className={`mx-2 flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${
         active
-          ? 'bg-[#00b97a]/15 text-[#00b97a] border border-[#00b97a]/20'
+          ? 'bg-[#8B5CF6]/15 text-[#00b97a] border border-[#8B5CF6]/20'
           : 'text-white/60 hover:bg-white/5 hover:text-white'
       }`}
     >
       <Icon className="w-4 h-4 shrink-0" />
       <span className="truncate flex-1 text-left">{label}</span>
       {badge > 0 && (
-        <span className="px-1.5 h-4 min-w-[16px] rounded-full bg-[#ff5555] text-white text-[10px] font-bold flex items-center justify-center">
+        <span className="px-1.5 h-4 min-w-[16px] rounded-full bg-[#E53935] text-white text-[10px] font-bold flex items-center justify-center">
           {badge > 99 ? '99+' : badge}
         </span>
       )}
@@ -1002,7 +1002,7 @@ function RailBtn({ icon: Icon, label, active, onClick, badge }) {
 
 function ToolBtn({ icon: Icon, title, active, onClick }) {
   return (
-    <button title={title} onClick={onClick} className={`w-8 h-8 rounded flex items-center justify-center transition ${active ? 'bg-[#1a8eff] text-white' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
+    <button title={title} onClick={onClick} className={`w-8 h-8 rounded flex items-center justify-center transition ${active ? 'bg-[#22D3EE] text-white' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
       <Icon className="w-4 h-4" />
     </button>
   );
@@ -1015,8 +1015,8 @@ function ActiveTradeCard({ trade: t, live, pct, index, isCurrent = true }) {
   const hasLive = live !== null && live !== undefined && live > 0;
   const pnl = !hasLive ? 0 : (winning ? +(t.amount * pct).toFixed(2) : -t.amount);
   const remaining = Math.max(0, Math.ceil((new Date(t.expiresAt).getTime() - Date.now()) / 1000));
-  const dirCls = t.direction === 'up' ? 'text-[#00b97a]' : 'text-[#ff5555]';
-  const dirBg  = t.direction === 'up' ? 'bg-[#00b97a]/15' : 'bg-[#ff5555]/15';
+  const dirCls = t.direction === 'up' ? 'text-[#00b97a]' : 'text-[#E53935]';
+  const dirBg  = t.direction === 'up' ? 'bg-[#8B5CF6]/15' : 'bg-[#E53935]/15';
   return (
     <div
       className={`bg-[#11161e] border rounded-lg p-3 transition ${isCurrent ? 'border-white/10' : 'border-white/5 opacity-90'}`}
@@ -1069,7 +1069,7 @@ function MobileActiveTrade({ trade: t, live, pct }) {
         <span>{t.direction === 'up' ? '▲' : '▼'} {t.asset}</span>
         <span className="text-[#f0b90b] font-bold">{remaining}s</span>
       </div>
-      <div className={`font-bold text-sm ${winning ? 'text-[#00b97a]' : 'text-[#ff5555]'}`}>
+      <div className={`font-bold text-sm ${winning ? 'text-[#00b97a]' : 'text-[#E53935]'}`}>
         {winning ? '+' : ''}${pnl.toFixed(2)}
       </div>
     </div>
@@ -1086,7 +1086,7 @@ function TradeRow({ t, live, pct = 0.85, active }) {
     <div className="bg-[#11161e] border border-white/5 rounded-lg p-3 text-xs">
       <div className="flex justify-between items-start mb-1">
         <div className="font-bold">{t.asset}</div>
-        <div className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${t.direction === 'up' ? 'bg-[#00b97a]/20 text-[#00b97a]' : 'bg-[#ff5555]/20 text-[#ff5555]'}`}>
+        <div className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${t.direction === 'up' ? 'bg-[#8B5CF6]/20 text-[#00b97a]' : 'bg-[#E53935]/20 text-[#E53935]'}`}>
           {t.direction === 'up' ? '▲' : '▼'} {t.direction.toUpperCase()}
         </div>
       </div>
@@ -1094,7 +1094,7 @@ function TradeRow({ t, live, pct = 0.85, active }) {
         <span>${t.amount}</span>
         {active ? <span className="text-[#f0b90b] font-mono">{remaining}s</span> : <span>{t.outcome?.toUpperCase()}</span>}
       </div>
-      <div className={`flex justify-between text-sm font-bold ${winning ? 'text-[#00b97a]' : 'text-[#ff5555]'}`}>
+      <div className={`flex justify-between text-sm font-bold ${winning ? 'text-[#00b97a]' : 'text-[#E53935]'}`}>
         <span>P/L</span>
         <span>{winning ? '+' : ''}${pnlNow?.toFixed?.(2) ?? '0.00'}</span>
       </div>

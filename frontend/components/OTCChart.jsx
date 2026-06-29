@@ -625,7 +625,7 @@ export default function OTCChart({
       {isCustomView && (
         <button
           onClick={resetView}
-          className="absolute bottom-9 right-[78px] z-20 bg-[#11161e] hover:bg-[#1a8eff] hover:text-white text-white/70 border border-white/10 rounded-md px-2.5 py-1 text-[10px] font-bold uppercase shadow-lg flex items-center gap-1 transition"
+          className="absolute bottom-9 right-[78px] z-20 bg-[#11161e] hover:bg-[#22D3EE] hover:text-white text-white/70 border border-white/10 rounded-md px-2.5 py-1 text-[10px] font-bold uppercase shadow-lg flex items-center gap-1 transition"
           title="Reset zoom · jump to latest"
         >
           ↻ Live

@@ -41,7 +41,7 @@ export default function AccountSwitcher({ user, onUserUpdate, onOpenDeposit, onO
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button className={`flex items-center ${compact ? 'gap-1.5 px-2 py-1' : 'gap-3 px-3 py-1.5'} bg-[#11161e] hover:bg-[#161c26] border border-white/5 rounded-lg`}>
-          <div className={`${compact ? 'w-5 h-5' : 'w-7 h-7'} rounded-full ${isLive ? 'bg-[#00b97a]/20' : 'bg-white/5'} flex items-center justify-center`}>
+          <div className={`${compact ? 'w-5 h-5' : 'w-7 h-7'} rounded-full ${isLive ? 'bg-[#8B5CF6]/20' : 'bg-white/5'} flex items-center justify-center`}>
             <Send className={`${compact ? 'w-2.5 h-2.5' : 'w-3.5 h-3.5'} ${isLive ? 'text-[#00b97a]' : 'text-white/60'}`} />
           </div>
           <div className="text-left">
@@ -72,7 +72,7 @@ export default function AccountSwitcher({ user, onUserUpdate, onOpenDeposit, onO
             <div className="flex items-center gap-2 mb-4 text-xs">
               <span className="text-white/50">Currency:</span>
               <span className="font-bold">USD</span>
-              <button className="px-2 py-0.5 bg-[#1a8eff] text-white text-[10px] rounded font-bold">CHANGE</button>
+              <button className="px-2 py-0.5 bg-[#22D3EE] text-white text-[10px] rounded font-bold">CHANGE</button>
             </div>
 
             <div className="h-px bg-white/5 my-3" />
@@ -82,14 +82,14 @@ export default function AccountSwitcher({ user, onUserUpdate, onOpenDeposit, onO
               onClick={() => switchTo('live')}
               className="flex items-start gap-3 p-2 -mx-2 rounded-lg hover:bg-white/5 cursor-pointer"
             >
-              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-1 shrink-0 ${isLive ? 'border-[#1a8eff] bg-[#1a8eff]' : 'border-white/30'}`}>
+              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-1 shrink-0 ${isLive ? 'border-[#22D3EE] bg-[#22D3EE]' : 'border-white/30'}`}>
                 {isLive && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
               </div>
               <div className="flex-1">
                 <div className="text-sm font-medium">Live Account</div>
                 <div className="text-xl font-bold mt-0.5">${Number(user.liveBalance || 0).toFixed(2)}</div>
                 <div className="text-xs text-white/40 mt-0.5">The daily limit is not set</div>
-                <div className="text-xs text-[#1a8eff] font-bold mt-0.5 cursor-pointer hover:underline">SET LIMIT</div>
+                <div className="text-xs text-[#22D3EE] font-bold mt-0.5 cursor-pointer hover:underline">SET LIMIT</div>
               </div>
             </div>
 
@@ -100,7 +100,7 @@ export default function AccountSwitcher({ user, onUserUpdate, onOpenDeposit, onO
               onClick={() => switchTo('demo')}
               className="flex items-start gap-3 p-2 -mx-2 rounded-lg hover:bg-white/5 cursor-pointer"
             >
-              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-1 shrink-0 ${!isLive ? 'border-[#1a8eff] bg-[#1a8eff]' : 'border-white/30'}`}>
+              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-1 shrink-0 ${!isLive ? 'border-[#22D3EE] bg-[#22D3EE]' : 'border-white/30'}`}>
                 {!isLive && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
               </div>
               <div className="flex-1 flex items-center justify-between">
@@ -127,7 +127,7 @@ export default function AccountSwitcher({ user, onUserUpdate, onOpenDeposit, onO
             )}
             <div className="flex-1" />
             <div className="h-px bg-white/5 my-2" />
-            <NavBtn onClick={logout} className="text-[#ff5555]" data-testid="acct-nav-logout"><LogOut className="w-4 h-4" /> Logout</NavBtn>
+            <NavBtn onClick={logout} className="text-[#E53935]" data-testid="acct-nav-logout"><LogOut className="w-4 h-4" /> Logout</NavBtn>
           </div>
         </div>
       </PopoverContent>

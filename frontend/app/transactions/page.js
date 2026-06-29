@@ -14,9 +14,9 @@ import { api, getStoredUser, setStoredUser, setToken } from '@/lib/api';
 import { toast } from 'sonner';
 
 const STATUS_STYLES = {
-  approved: { label: 'Approved', cls: 'bg-[#00b97a]/15 text-[#00b97a]', icon: CheckCircle2 },
+  approved: { label: 'Approved', cls: 'bg-[#8B5CF6]/15 text-[#00b97a]', icon: CheckCircle2 },
   pending:  { label: 'Pending',  cls: 'bg-[#f0b90b]/15 text-[#f0b90b]', icon: Clock },
-  rejected: { label: 'Rejected', cls: 'bg-[#ff5555]/15 text-[#ff5555]', icon: XCircle },
+  rejected: { label: 'Rejected', cls: 'bg-[#E53935]/15 text-[#E53935]', icon: XCircle },
 };
 
 function StatusPill({ status }) {
@@ -138,7 +138,7 @@ export default function TransactionsPage() {
 
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-xl bg-[#00b97a]/15 border border-[#00b97a]/30 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 flex items-center justify-center">
             <Receipt className="w-5 h-5 text-[#00b97a]" />
           </div>
           <div>
@@ -204,7 +204,7 @@ function FilterPill({ label, active, onClick, testid }) {
       onClick={onClick}
       data-testid={testid}
       className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
-        active ? 'bg-[#00b97a] text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
+        active ? 'bg-[#8B5CF6] text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
       }`}
     >
       {label}
@@ -217,14 +217,14 @@ function TxRow({ t }) {
   const isDeposit = t.kind === 'deposit';
   return (
     <div
-      className={`bg-[#11161e] border border-white/5 rounded-lg overflow-hidden ${expanded ? 'ring-1 ring-[#00b97a]/30' : ''}`}
+      className={`bg-[#11161e] border border-white/5 rounded-lg overflow-hidden ${expanded ? 'ring-1 ring-[#8B5CF6]/30' : ''}`}
       data-testid={`tx-row-${t.id}`}
     >
       <button
         onClick={() => setExpanded(v => !v)}
         className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/[0.02] text-left"
       >
-        <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isDeposit ? 'bg-[#00b97a]/15 text-[#00b97a]' : 'bg-[#22d3ee]/15 text-[#22d3ee]'}`}>
+        <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isDeposit ? 'bg-[#8B5CF6]/15 text-[#00b97a]' : 'bg-[#22d3ee]/15 text-[#22d3ee]'}`}>
           {isDeposit ? <Wallet className="w-4 h-4" /> : <ArrowDownToLine className="w-4 h-4" />}
         </div>
         <div className="flex-1 min-w-0">
@@ -314,7 +314,7 @@ function MethodRow({ label, fieldKey, value }) {
             <img
               src={value}
               alt={label}
-              className="max-h-32 rounded border border-white/10 hover:border-[#00b97a]/60 transition cursor-zoom-in object-contain bg-[#11161e]"
+              className="max-h-32 rounded border border-white/10 hover:border-[#8B5CF6]/60 transition cursor-zoom-in object-contain bg-[#11161e]"
             />
           </a>
           <a

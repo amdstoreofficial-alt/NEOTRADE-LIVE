@@ -160,7 +160,7 @@ export default function AdminPanel() {
               key={it.id}
               onClick={() => { setView(it.id); setNavOpen(false); }}
               className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${
-                view === it.id ? 'bg-[#1a8eff]/15 text-[#1a8eff] border border-[#1a8eff]/30' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                view === it.id ? 'bg-[#22D3EE]/15 text-[#22D3EE] border border-[#22D3EE]/30' : 'text-white/60 hover:bg-white/5 hover:text-white'
               }`}
             >
               <it.icon className="w-4 h-4 shrink-0" />
@@ -169,10 +169,10 @@ export default function AdminPanel() {
                 <span className="ml-auto px-1.5 py-0.5 rounded-full bg-[#f0b90b] text-black text-[10px] font-bold">{pendingDeposits.length}</span>
               )}
               {it.id === 'withdrawals' && pendingWithdrawals.length > 0 && (
-                <span className="ml-auto px-1.5 py-0.5 rounded-full bg-[#ff5555] text-white text-[10px] font-bold">{pendingWithdrawals.length}</span>
+                <span className="ml-auto px-1.5 py-0.5 rounded-full bg-[#E53935] text-white text-[10px] font-bold">{pendingWithdrawals.length}</span>
               )}
               {it.id === 'support' && supportUnread > 0 && (
-                <span className="ml-auto px-1.5 py-0.5 rounded-full bg-[#ff5555] text-white text-[10px] font-bold">{supportUnread}</span>
+                <span className="ml-auto px-1.5 py-0.5 rounded-full bg-[#E53935] text-white text-[10px] font-bold">{supportUnread}</span>
               )}
             </button>
           ))}
@@ -181,7 +181,7 @@ export default function AdminPanel() {
           <button onClick={() => router.push('/trade')} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/60 hover:bg-white/5 hover:text-white">
             <ChevronRight className="w-4 h-4" /> Trading Room
           </button>
-          <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#ff5555] hover:bg-[#ff5555]/10">
+          <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#E53935] hover:bg-[#E53935]/10">
             <LogOut className="w-4 h-4" /> Logout
           </button>
         </div>
@@ -203,13 +203,13 @@ export default function AdminPanel() {
             <Button variant="ghost" size="icon" className="text-white/60 hover:text-white relative">
               <Bell className="w-5 h-5" />
               {(pendingDeposits.length + pendingWithdrawals.length) > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#ff5555] text-[10px] font-bold flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#E53935] text-[10px] font-bold flex items-center justify-center">
                   {pendingDeposits.length + pendingWithdrawals.length}
                 </span>
               )}
             </Button>
             <div className="hidden sm:flex items-center gap-2 bg-[#11161e] border border-white/10 rounded-full px-3 py-1.5">
-              <div className="w-6 h-6 rounded-full bg-[#00b97a]/20 flex items-center justify-center">
+              <div className="w-6 h-6 rounded-full bg-[#8B5CF6]/20 flex items-center justify-center">
                 <Shield className="w-3 h-3 text-[#00b97a]" />
               </div>
               <div className="text-xs">
@@ -302,7 +302,7 @@ function PayoutMultiplierField({ value, onChange }) {
         onBlur={commit}
         onKeyDown={(e) => { if (e.key === 'Enter') { e.currentTarget.blur(); } }}
         data-testid="admin-payout-multiplier-input"
-        className="bg-transparent border-0 h-6 w-14 text-xs p-0 text-white font-bold text-center outline-none focus:text-[#00b97a] caret-[#00b97a]"
+        className="bg-transparent border-0 h-6 w-14 text-xs p-0 text-white font-bold text-center outline-none focus:text-[#00b97a] caret-[#8B5CF6]"
       />
       <span className="text-white/50 font-bold">x</span>
       <span className="text-white/30">(applies to all new trades)</span>
@@ -443,7 +443,7 @@ function DashboardView({ stats, settings, setSettings, saveSettings, setMode, cu
               />
               <Button
                 onClick={() => saveSettings({ tradePattern: customPattern || 'RANDOM' })}
-                className="h-8 bg-[#1a8eff] hover:bg-[#1278e6] text-white px-4 text-xs font-bold"
+                className="h-8 bg-[#22D3EE] hover:bg-[#0891B2] text-white px-4 text-xs font-bold"
               >
                 Activate
               </Button>
@@ -477,7 +477,7 @@ function DashboardView({ stats, settings, setSettings, saveSettings, setMode, cu
               onChange={(e) => setSettings(s => ({ ...s, dailyProfitTarget: Number(e.target.value) || 0 }))}
               className="bg-[#0c1015] border-white/10 h-9"
             />
-            <Button onClick={() => saveSettings({ dailyProfitTarget: settings.dailyProfitTarget })} className="h-9 bg-[#00b97a] hover:bg-[#00a86d] text-xs font-bold">
+            <Button onClick={() => saveSettings({ dailyProfitTarget: settings.dailyProfitTarget })} className="h-9 bg-[#8B5CF6] hover:bg-[#7C3AED] text-xs font-bold">
               Save
             </Button>
           </div>
@@ -498,7 +498,7 @@ function DashboardView({ stats, settings, setSettings, saveSettings, setMode, cu
                 onChange={(e) => setSettings(s => ({ ...s, minDeposit: Number(e.target.value) || 0 }))}
                 className="bg-[#0c1015] border-white/10 h-9"
               />
-              <Button onClick={() => saveSettings({ minDeposit: settings.minDeposit })} className="h-9 bg-[#1a8eff] hover:bg-[#1278e6] text-xs font-bold px-4">Save</Button>
+              <Button onClick={() => saveSettings({ minDeposit: settings.minDeposit })} className="h-9 bg-[#22D3EE] hover:bg-[#0891B2] text-xs font-bold px-4">Save</Button>
             </div>
           </div>
           <div>
@@ -512,7 +512,7 @@ function DashboardView({ stats, settings, setSettings, saveSettings, setMode, cu
                 onChange={(e) => setSettings(s => ({ ...s, minWithdrawal: Number(e.target.value) || 0 }))}
                 className="bg-[#0c1015] border-white/10 h-9"
               />
-              <Button onClick={() => saveSettings({ minWithdrawal: settings.minWithdrawal })} className="h-9 bg-[#1a8eff] hover:bg-[#1278e6] text-xs font-bold px-4">Save</Button>
+              <Button onClick={() => saveSettings({ minWithdrawal: settings.minWithdrawal })} className="h-9 bg-[#22D3EE] hover:bg-[#0891B2] text-xs font-bold px-4">Save</Button>
             </div>
           </div>
         </div>
@@ -533,7 +533,7 @@ function DashboardView({ stats, settings, setSettings, saveSettings, setMode, cu
 
 function ManipulationToggle({ enabled, onToggle }) {
   return (
-    <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 border ${enabled ? 'border-[#00b97a]/40 bg-[#00b97a]/10' : 'border-white/10 bg-[#0c1015]'}`}>
+    <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 border ${enabled ? 'border-[#8B5CF6]/40 bg-[#8B5CF6]/10' : 'border-white/10 bg-[#0c1015]'}`}>
       <Power className={`w-3.5 h-3.5 ${enabled ? 'text-[#00b97a]' : 'text-white/40'}`} />
       <div className="text-xs leading-tight">
         <div className="font-bold uppercase tracking-wider">{enabled ? 'Win/Loss ON' : 'Natural'}</div>
@@ -652,7 +652,7 @@ function MarketsView() {
               <td className="p-3 font-mono">{a.symbol}</td>
               <td className="p-3 font-bold">{a.display}</td>
               <td className="p-3">
-                <Badge className={a.kind === 'live' ? 'bg-[#ff5555]/20 text-[#ff5555]' : 'bg-[#00b97a]/20 text-[#00b97a]'}>{a.kind?.toUpperCase()}</Badge>
+                <Badge className={a.kind === 'live' ? 'bg-[#E53935]/20 text-[#E53935]' : 'bg-[#8B5CF6]/20 text-[#00b97a]'}>{a.kind?.toUpperCase()}</Badge>
               </td>
               <td className="p-3 text-right font-mono">{a.price ? Number(a.price).toFixed(a.decimals) : '...'}</td>
               <td className="p-3 text-right font-bold text-[#f0b90b]">{Math.round((a.payout || 0) * 100)}%</td>
@@ -725,7 +725,7 @@ function UsersView({ users, adjustBalance }) {
                 <td className="p-3 text-white/80 truncate max-w-[220px]" title={u.email}>{u.email}</td>
                 <td className="p-3 font-mono text-xs text-white/60" title={u.id}>#{shortId(u.id)}</td>
                 <td className="p-3">
-                  <Badge className={u.role === 'admin' ? 'bg-[#ff5555]/20 text-[#ff5555]' : 'bg-white/5 text-white/70'}>{u.role}</Badge>
+                  <Badge className={u.role === 'admin' ? 'bg-[#E53935]/20 text-[#E53935]' : 'bg-white/5 text-white/70'}>{u.role}</Badge>
                 </td>
                 <td className="p-3 text-xs text-white/60 whitespace-nowrap">{fmtDate(u.createdAt)}</td>
                 <td className="p-3 text-right font-mono">${u.demoBalance?.toFixed(2)}</td>
@@ -829,7 +829,7 @@ function TabPill({ children, active, onClick, count, testid }) {
       onClick={onClick}
       data-testid={testid}
       className={`px-3 py-1.5 rounded-md text-xs font-bold transition ${
-        active ? 'bg-[#1a8eff] text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
+        active ? 'bg-[#22D3EE] text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
       }`}
     >
       {children}
@@ -855,7 +855,7 @@ function PaymentTable({ items, type, onAction, mode = 'pending' }) {
           <div key={it.id} className="bg-[#11161e] border border-white/5 rounded-xl p-4 flex flex-col md:flex-row gap-4" data-testid={`admin-${type}-row-${it.id}`}>
             {screenshot && (
               <a href={screenshot} target="_blank" rel="noreferrer" className="shrink-0">
-                <img src={screenshot} alt="Transaction screenshot" className="w-full md:w-32 h-32 object-cover rounded-lg border border-white/10 hover:border-[#1a8eff] transition" />
+                <img src={screenshot} alt="Transaction screenshot" className="w-full md:w-32 h-32 object-cover rounded-lg border border-white/10 hover:border-[#22D3EE] transition" />
               </a>
             )}
             <div className="flex-1 min-w-0">
@@ -889,8 +889,8 @@ function PaymentTable({ items, type, onAction, mode = 'pending' }) {
               </div>
               {isPending ? (
                 <div className="flex justify-end gap-2">
-                  <Button size="sm" data-testid={`admin-${type}-approve-${it.id}`} className="h-8 px-3 text-xs bg-[#00b97a] hover:bg-[#00a86d]" onClick={() => onAction(it.id, 'approve')}>Approve</Button>
-                  <Button size="sm" data-testid={`admin-${type}-reject-${it.id}`} className="h-8 px-3 text-xs bg-[#ff5555] hover:bg-[#ee4444]" onClick={() => onAction(it.id, 'reject')}>Reject</Button>
+                  <Button size="sm" data-testid={`admin-${type}-approve-${it.id}`} className="h-8 px-3 text-xs bg-[#8B5CF6] hover:bg-[#7C3AED]" onClick={() => onAction(it.id, 'approve')}>Approve</Button>
+                  <Button size="sm" data-testid={`admin-${type}-reject-${it.id}`} className="h-8 px-3 text-xs bg-[#E53935] hover:bg-[#F44336]" onClick={() => onAction(it.id, 'reject')}>Reject</Button>
                 </div>
               ) : (
                 it.adminNote && (
@@ -910,8 +910,8 @@ function PaymentTable({ items, type, onAction, mode = 'pending' }) {
 
 function PaymentStatusPill({ status }) {
   const cfg = {
-    approved: { label: 'Approved', cls: 'bg-[#00b97a]/15 text-[#00b97a]', Icon: Check },
-    rejected: { label: 'Rejected', cls: 'bg-[#ff5555]/15 text-[#ff5555]', Icon: X },
+    approved: { label: 'Approved', cls: 'bg-[#8B5CF6]/15 text-[#00b97a]', Icon: Check },
+    rejected: { label: 'Rejected', cls: 'bg-[#E53935]/15 text-[#E53935]', Icon: X },
     pending:  { label: 'Pending',  cls: 'bg-[#f0b90b]/15 text-[#f0b90b]', Icon: Clock },
   }[status] || { label: status, cls: 'bg-white/10 text-white/60', Icon: Clock };
   const I = cfg.Icon;
@@ -954,7 +954,7 @@ function TradesTable({ trades, onForce, live, closed }) {
                 <td className="p-3">
                   {t.direction === 'up'
                     ? <span className="text-[#00b97a] font-bold flex items-center gap-1"><TrendingUp className="w-3 h-3" /> UP</span>
-                    : <span className="text-[#ff5555] font-bold flex items-center gap-1"><TrendingDown className="w-3 h-3" /> DOWN</span>}
+                    : <span className="text-[#E53935] font-bold flex items-center gap-1"><TrendingDown className="w-3 h-3" /> DOWN</span>}
                 </td>
                 <td className="p-3 text-right font-mono">${t.amount}</td>
                 <td className="p-3 text-right font-mono">{t.entryPrice?.toFixed?.(5)}</td>
@@ -962,21 +962,21 @@ function TradesTable({ trades, onForce, live, closed }) {
                 {live && <td className="p-3 text-right text-[#f0b90b] font-mono">{remaining}s</td>}
                 {closed && (
                   <td className="p-3 text-right">
-                    <Badge className={t.outcome === 'win' ? 'bg-[#00b97a]/20 text-[#00b97a]' : 'bg-[#ff5555]/20 text-[#ff5555]'}>
+                    <Badge className={t.outcome === 'win' ? 'bg-[#8B5CF6]/20 text-[#00b97a]' : 'bg-[#E53935]/20 text-[#E53935]'}>
                       {t.outcome?.toUpperCase()}
                       {t.wedgeApplied && <Zap className="w-3 h-3 ml-1" />}
                     </Badge>
                   </td>
                 )}
                 {closed && (
-                  <td className={`p-3 text-right font-mono font-bold ${t.pnl >= 0 ? 'text-[#00b97a]' : 'text-[#ff5555]'}`}>
+                  <td className={`p-3 text-right font-mono font-bold ${t.pnl >= 0 ? 'text-[#00b97a]' : 'text-[#E53935]'}`}>
                     {t.pnl >= 0 ? '+' : ''}${t.pnl?.toFixed?.(2)}
                   </td>
                 )}
                 {live && (
                   <td className="p-3 text-right">
                     {t.forceOutcome ? (
-                      <Badge className={t.forceOutcome === 'win' ? 'bg-[#00b97a]/20 text-[#00b97a]' : 'bg-[#ff5555]/20 text-[#ff5555]'}>
+                      <Badge className={t.forceOutcome === 'win' ? 'bg-[#8B5CF6]/20 text-[#00b97a]' : 'bg-[#E53935]/20 text-[#E53935]'}>
                         FORCE {t.forceOutcome.toUpperCase()}
                       </Badge>
                     ) : <span className="text-white/30 text-xs">none</span>}
@@ -985,8 +985,8 @@ function TradesTable({ trades, onForce, live, closed }) {
                 {live && (
                   <td className="p-3">
                     <div className="flex gap-1 justify-end">
-                      <Button size="sm" className="h-7 px-2 text-xs bg-[#00b97a] hover:bg-[#00a86d]" onClick={() => onForce(t.id, 'win')}>WIN</Button>
-                      <Button size="sm" className="h-7 px-2 text-xs bg-[#ff5555] hover:bg-[#ee4444]" onClick={() => onForce(t.id, 'loss')}>LOSS</Button>
+                      <Button size="sm" className="h-7 px-2 text-xs bg-[#8B5CF6] hover:bg-[#7C3AED]" onClick={() => onForce(t.id, 'win')}>WIN</Button>
+                      <Button size="sm" className="h-7 px-2 text-xs bg-[#E53935] hover:bg-[#F44336]" onClick={() => onForce(t.id, 'loss')}>LOSS</Button>
                       {t.forceOutcome && (
                         <Button size="sm" variant="outline" className="h-7 px-2 text-xs border-white/10" onClick={() => onForce(t.id, '')}>
                           <X className="w-3 h-3" />
@@ -1092,7 +1092,7 @@ function TradesView({ openTrades, closedTrades, onForce }) {
               key={opt.v}
               onClick={() => setRange(opt.v)}
               data-testid={`admin-trades-range-${opt.v}`}
-              className={`px-3 py-1 rounded text-xs font-semibold transition ${range === opt.v ? 'bg-[#1a8eff] text-white' : 'text-white/50 hover:text-white'}`}
+              className={`px-3 py-1 rounded text-xs font-semibold transition ${range === opt.v ? 'bg-[#22D3EE] text-white' : 'text-white/50 hover:text-white'}`}
             >
               {opt.l}
             </button>
@@ -1107,7 +1107,7 @@ function TradesView({ openTrades, closedTrades, onForce }) {
         <SummaryCard label="Open"                    value={summary.open}                       accent="text-[#22d3ee]"    testid="admin-trades-summary-open" />
         <SummaryCard label="Closed"                  value={summary.closed}                     accent="text-white/80"     testid="admin-trades-summary-closed" />
         <SummaryCard label="Wins"                    value={summary.wins}                       accent="text-[#00b97a]"    testid="admin-trades-summary-wins" />
-        <SummaryCard label="Losses"                  value={summary.losses}                     accent="text-[#ff5555]"    testid="admin-trades-summary-losses" />
+        <SummaryCard label="Losses"                  value={summary.losses}                     accent="text-[#E53935]"    testid="admin-trades-summary-losses" />
         <SummaryCard label="Win rate"                value={`${summary.winRate}%`}              accent="text-[#f0b90b]"    testid="admin-trades-summary-winrate" />
         <SummaryCard label="Volume"                  value={`$${fmt(summary.volume)}`}          accent="text-white"        testid="admin-trades-summary-volume" />
       </div>
@@ -1117,7 +1117,7 @@ function TradesView({ openTrades, closedTrades, onForce }) {
             label={`House net P&L · ${rangeLabel}`}
             value={`${summary.netPnl <= 0 ? '+' : '-'}$${fmt(Math.abs(summary.netPnl))}`}
             // House gains when traders LOSE → trader pnl is negative → house +.
-            accent={summary.netPnl <= 0 ? 'text-[#00b97a]' : 'text-[#ff5555]'}
+            accent={summary.netPnl <= 0 ? 'text-[#00b97a]' : 'text-[#E53935]'}
             big
             testid="admin-trades-summary-house-pnl"
           />
@@ -1193,8 +1193,8 @@ function AnnouncementsView() {
       {/* Composer */}
       <div className="bg-[#11161e] border border-white/5 rounded-xl p-4 sm:p-6">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-[#1a8eff]/15 flex items-center justify-center">
-            <Megaphone className="w-5 h-5 text-[#1a8eff]" />
+          <div className="w-10 h-10 rounded-full bg-[#22D3EE]/15 flex items-center justify-center">
+            <Megaphone className="w-5 h-5 text-[#22D3EE]" />
           </div>
           <div>
             <div className="text-base font-bold">Broadcast Announcement</div>
@@ -1214,7 +1214,7 @@ function AnnouncementsView() {
               placeholder="Detailed message visible to all users..."
               rows={4}
               maxLength={2000}
-              className="w-full mt-1 bg-[#0c1015] border border-white/10 rounded-md p-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#1a8eff]/60"
+              className="w-full mt-1 bg-[#0c1015] border border-white/10 rounded-md p-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#22D3EE]/60"
             />
             <div className="text-[10px] text-white/40 text-right mt-1">{message.length}/2000</div>
           </div>
@@ -1223,7 +1223,7 @@ function AnnouncementsView() {
             <Input type="datetime-local" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} className="bg-[#0c1015] border-white/10 mt-1" />
             <div className="text-[10px] text-white/40 mt-1">Leave empty to keep active until you manually deactivate.</div>
           </div>
-          <Button type="submit" disabled={busy} className="bg-[#1a8eff] hover:bg-[#1278e6] font-bold">
+          <Button type="submit" disabled={busy} className="bg-[#22D3EE] hover:bg-[#0891B2] font-bold">
             <Megaphone className="w-4 h-4 mr-2" /> {busy ? 'Posting…' : 'Post Announcement'}
           </Button>
         </form>
@@ -1246,11 +1246,11 @@ function AnnouncementsView() {
             const live = it.active && !expired;
             return (
               <div key={it.id} className="p-4 flex items-start gap-3">
-                <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${live ? 'bg-[#00b97a] animate-pulse' : 'bg-white/30'}`} />
+                <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${live ? 'bg-[#8B5CF6] animate-pulse' : 'bg-white/30'}`} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <div className="font-bold text-sm">{it.title}</div>
-                    {live && <Badge className="bg-[#00b97a]/20 text-[#00b97a] text-[10px]">LIVE</Badge>}
+                    {live && <Badge className="bg-[#8B5CF6]/20 text-[#00b97a] text-[10px]">LIVE</Badge>}
                     {expired && <Badge className="bg-white/10 text-white/50 text-[10px]">EXPIRED</Badge>}
                     {!it.active && !expired && <Badge className="bg-[#f0b90b]/20 text-[#f0b90b] text-[10px]">PAUSED</Badge>}
                   </div>
@@ -1264,7 +1264,7 @@ function AnnouncementsView() {
                   <Button size="sm" variant="outline" className="h-7 text-xs border-white/10" onClick={() => toggle(it)}>
                     {it.active ? 'Deactivate' : 'Activate'}
                   </Button>
-                  <Button size="sm" className="h-7 text-xs bg-[#ff5555] hover:bg-[#ee4444]" onClick={() => remove(it.id)}>
+                  <Button size="sm" className="h-7 text-xs bg-[#E53935] hover:bg-[#F44336]" onClick={() => remove(it.id)}>
                     Delete
                   </Button>
                 </div>
@@ -1370,7 +1370,7 @@ function SupportView({ onRefreshCount }) {
             key={f}
             onClick={() => { setFilter(f); setActive(null); }}
             className={`px-3 py-1.5 rounded-md text-xs font-semibold uppercase ${
-              filter === f ? 'bg-[#1a8eff] text-white' : 'bg-[#11161e] border border-white/10 text-white/60 hover:bg-white/5'
+              filter === f ? 'bg-[#22D3EE] text-white' : 'bg-[#11161e] border border-white/10 text-white/60 hover:bg-white/5'
             }`}
           >
             {f}
@@ -1401,7 +1401,7 @@ function SupportView({ onRefreshCount }) {
                 <button
                   key={t.id}
                   onClick={() => openTicket(t.id)}
-                  className={`w-full text-left px-3 py-3 border-b border-white/[0.04] hover:bg-white/5 transition ${active?.id === t.id ? 'bg-[#1a8eff]/10' : ''}`}
+                  className={`w-full text-left px-3 py-3 border-b border-white/[0.04] hover:bg-white/5 transition ${active?.id === t.id ? 'bg-[#22D3EE]/10' : ''}`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
@@ -1419,7 +1419,7 @@ function SupportView({ onRefreshCount }) {
                     <div className="flex flex-col items-end gap-1 shrink-0">
                       <span className="text-[10px] text-white/40">{fmtTime(t.lastMessageAt)}</span>
                       {t.unreadForAdmin > 0 && (
-                        <span className="px-1.5 h-4 min-w-[16px] rounded-full bg-[#ff5555] text-white text-[10px] font-bold flex items-center justify-center">{t.unreadForAdmin}</span>
+                        <span className="px-1.5 h-4 min-w-[16px] rounded-full bg-[#E53935] text-white text-[10px] font-bold flex items-center justify-center">{t.unreadForAdmin}</span>
                       )}
                     </div>
                   </div>
@@ -1433,7 +1433,7 @@ function SupportView({ onRefreshCount }) {
         <div className={`${active ? 'flex' : 'hidden lg:flex'} flex-col bg-[#0a0d12] border border-white/5 rounded-lg overflow-hidden min-h-0`}>
           {!active ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-              <MessageSquare className="w-10 h-10 text-[#1a8eff]/60 mb-3" />
+              <MessageSquare className="w-10 h-10 text-[#22D3EE]/60 mb-3" />
               <div className="text-base font-semibold">Select a ticket</div>
               <div className="text-xs text-white/40 mt-1">Pick a ticket from the list to reply.</div>
             </div>
@@ -1459,7 +1459,7 @@ function SupportView({ onRefreshCount }) {
                   size="sm"
                   variant="outline"
                   onClick={toggleStatus}
-                  className={`h-8 text-xs border-white/10 ${active.status === 'open' ? 'text-[#ff5555] hover:bg-[#ff5555]/10' : 'text-[#00b97a] hover:bg-[#00b97a]/10'}`}
+                  className={`h-8 text-xs border-white/10 ${active.status === 'open' ? 'text-[#E53935] hover:bg-[#E53935]/10' : 'text-[#00b97a] hover:bg-[#7C3AED]/10'}`}
                 >
                   {active.status === 'open' ? (<><Lock className="w-3.5 h-3.5 mr-1" /> Close</>) : (<><Unlock className="w-3.5 h-3.5 mr-1" /> Reopen</>)}
                 </Button>
@@ -1472,9 +1472,9 @@ function SupportView({ onRefreshCount }) {
                   return (
                     <div key={m.id} className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}>
                       <div className={`max-w-[80%] rounded-lg px-3 py-2 ${
-                        isAdmin ? 'bg-[#1a8eff]/20 border border-[#1a8eff]/30' : 'bg-[#11161e] border border-white/10'
+                        isAdmin ? 'bg-[#22D3EE]/20 border border-[#22D3EE]/30' : 'bg-[#11161e] border border-white/10'
                       }`}>
-                        <div className={`text-[10px] uppercase tracking-wider mb-0.5 font-semibold ${isAdmin ? 'text-[#1a8eff]' : 'text-[#00b97a]'}`}>
+                        <div className={`text-[10px] uppercase tracking-wider mb-0.5 font-semibold ${isAdmin ? 'text-[#22D3EE]' : 'text-[#00b97a]'}`}>
                           {isAdmin ? 'You (Admin)' : 'User'}
                         </div>
                         <div className="text-sm whitespace-pre-wrap break-words">{m.text}</div>
@@ -1499,9 +1499,9 @@ function SupportView({ onRefreshCount }) {
                       value={reply}
                       onChange={e => setReply(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); } }}
-                      className="flex-1 resize-none bg-[#11161e] border border-white/10 rounded-md px-3 py-2 text-sm text-white outline-none focus:border-[#1a8eff]/50 max-h-32 min-h-[38px]"
+                      className="flex-1 resize-none bg-[#11161e] border border-white/10 rounded-md px-3 py-2 text-sm text-white outline-none focus:border-[#22D3EE]/50 max-h-32 min-h-[38px]"
                     />
-                    <Button onClick={sendReply} disabled={sending || !reply.trim()} className="bg-[#1a8eff] hover:bg-[#1278e6] h-10 px-4">
+                    <Button onClick={sendReply} disabled={sending || !reply.trim()} className="bg-[#22D3EE] hover:bg-[#0891B2] h-10 px-4">
                       {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     </Button>
                   </div>

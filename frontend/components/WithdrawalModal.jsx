@@ -67,8 +67,8 @@ export default function WithdrawalModal({ open, onClose, user, onUserUpdate, onS
 
         <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-white/5 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#ff5555]/15 flex items-center justify-center">
-              <Wallet className="w-4 h-4 text-[#ff5555]" />
+            <div className="w-9 h-9 rounded-lg bg-[#E53935]/15 flex items-center justify-center">
+              <Wallet className="w-4 h-4 text-[#E53935]" />
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold">Withdraw · Binance</h2>
@@ -82,22 +82,22 @@ export default function WithdrawalModal({ open, onClose, user, onUserUpdate, onS
 
         {done ? (
           <div className="p-8 text-center">
-            <div className="w-16 h-16 rounded-full bg-[#00b97a]/20 mx-auto flex items-center justify-center mb-3">
+            <div className="w-16 h-16 rounded-full bg-[#8B5CF6]/20 mx-auto flex items-center justify-center mb-3">
               <CheckCircle2 className="w-8 h-8 text-[#00b97a]" />
             </div>
             <div className="text-lg font-bold mb-1">Request Submitted</div>
             <div className="text-sm text-white/60 mb-4">The admin will review and process your withdrawal shortly. Funds were placed on hold from your Live balance.</div>
-            <Button onClick={handleClose} className="bg-[#00b97a] hover:bg-[#00a86d] font-bold">Done</Button>
+            <Button onClick={handleClose} className="bg-[#8B5CF6] hover:bg-[#7C3AED] font-bold">Done</Button>
           </div>
         ) : (
           <div className="overflow-y-auto p-4 sm:p-5 space-y-4">
             {/* Live balance summary */}
-            <div className="bg-gradient-to-br from-[#1a8eff]/10 to-transparent border border-[#1a8eff]/30 rounded-xl p-4 flex items-center justify-between">
+            <div className="bg-gradient-to-br from-[#22D3EE]/10 to-transparent border border-[#22D3EE]/30 rounded-xl p-4 flex items-center justify-between">
               <div>
                 <div className="text-[10px] uppercase tracking-wider text-white/50 font-bold">Available (Live)</div>
                 <div className="text-2xl font-extrabold text-white mt-0.5">${liveBal.toFixed(2)}</div>
               </div>
-              <ShieldCheck className="w-7 h-7 text-[#1a8eff]" />
+              <ShieldCheck className="w-7 h-7 text-[#22D3EE]" />
             </div>
 
             {/* Binance ID */}
@@ -118,7 +118,7 @@ export default function WithdrawalModal({ open, onClose, user, onUserUpdate, onS
             {/* Recipient name */}
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-full bg-[#1a8eff] text-white text-xs font-bold flex items-center justify-center">2</div>
+                <div className="w-6 h-6 rounded-full bg-[#22D3EE] text-white text-xs font-bold flex items-center justify-center">2</div>
                 <div className="text-sm font-bold">Recipient name</div>
               </div>
               <Input
@@ -132,7 +132,7 @@ export default function WithdrawalModal({ open, onClose, user, onUserUpdate, onS
             {/* Amount */}
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-full bg-[#1a8eff] text-white text-xs font-bold flex items-center justify-center">3</div>
+                <div className="w-6 h-6 rounded-full bg-[#22D3EE] text-white text-xs font-bold flex items-center justify-center">3</div>
                 <div className="text-sm font-bold">Amount to withdraw (USD)</div>
               </div>
               <div className="relative">
@@ -164,7 +164,7 @@ export default function WithdrawalModal({ open, onClose, user, onUserUpdate, onS
             <Button
               onClick={submit}
               disabled={submitting || liveBal <= 0}
-              className="w-full h-11 bg-[#ff5555] hover:bg-[#ee4444] font-bold text-sm"
+              className="w-full h-11 bg-[#E53935] hover:bg-[#F44336] font-bold text-sm"
             >
               {submitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
               {submitting ? 'Submitting…' : 'Submit Withdrawal Request'}

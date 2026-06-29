@@ -124,11 +124,11 @@ export default function SupportPage() {
             <TradingLiteLogo compact />
           </div>
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-[#1a8eff]" />
+            <MessageSquare className="w-5 h-5 text-[#22D3EE]" />
             <h1 className="text-base sm:text-lg font-bold">Live Support</h1>
           </div>
         </div>
-        <Button onClick={() => setNewOpen(true)} size="sm" className="bg-[#1a8eff] hover:bg-[#1278e6] h-9">
+        <Button onClick={() => setNewOpen(true)} size="sm" className="bg-[#22D3EE] hover:bg-[#0891B2] h-9">
           <Plus className="w-4 h-4 mr-1" /> <span className="hidden xs:inline sm:inline">New Ticket</span><span className="xs:hidden sm:hidden">New</span>
         </Button>
       </header>
@@ -146,7 +146,7 @@ export default function SupportPage() {
               <Inbox className="w-10 h-10 text-white/20 mb-3" />
               <div className="text-sm font-semibold text-white/60">No tickets yet</div>
               <div className="text-xs text-white/40 mt-1">Start a conversation with our support team.</div>
-              <Button onClick={() => setNewOpen(true)} size="sm" className="mt-4 bg-[#1a8eff] hover:bg-[#1278e6]">
+              <Button onClick={() => setNewOpen(true)} size="sm" className="mt-4 bg-[#22D3EE] hover:bg-[#0891B2]">
                 <Plus className="w-4 h-4 mr-1" /> Create Ticket
               </Button>
             </div>
@@ -156,7 +156,7 @@ export default function SupportPage() {
                 <button
                   key={t.id}
                   onClick={() => openTicket(t.id)}
-                  className={`w-full text-left px-3 py-3 border-b border-white/[0.04] hover:bg-white/5 transition ${active?.id === t.id ? 'bg-[#1a8eff]/10' : ''}`}
+                  className={`w-full text-left px-3 py-3 border-b border-white/[0.04] hover:bg-white/5 transition ${active?.id === t.id ? 'bg-[#22D3EE]/10' : ''}`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
@@ -168,7 +168,7 @@ export default function SupportPage() {
                     <div className="flex flex-col items-end gap-1 shrink-0">
                       <span className="text-[10px] text-white/40">{fmtTime(t.lastMessageAt)}</span>
                       {t.unreadForUser > 0 ? (
-                        <span className="px-1.5 h-4 min-w-[16px] rounded-full bg-[#ff5555] text-white text-[10px] font-bold flex items-center justify-center">{t.unreadForUser}</span>
+                        <span className="px-1.5 h-4 min-w-[16px] rounded-full bg-[#E53935] text-white text-[10px] font-bold flex items-center justify-center">{t.unreadForUser}</span>
                       ) : t.status === 'closed' ? (
                         <span className="px-1.5 h-4 rounded-full bg-white/10 text-white/60 text-[9px] font-bold flex items-center">CLOSED</span>
                       ) : null}
@@ -184,7 +184,7 @@ export default function SupportPage() {
         <section className={`${active ? 'flex' : 'hidden md:flex'} flex-1 min-w-0 flex-col bg-[#0c1015]`}>
           {!active ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-              <Sparkles className="w-10 h-10 text-[#1a8eff]/60 mb-3" />
+              <Sparkles className="w-10 h-10 text-[#22D3EE]/60 mb-3" />
               <div className="text-base font-semibold">Select a ticket</div>
               <div className="text-xs text-white/40 mt-1">Choose a conversation from the list or start a new one.</div>
             </div>
@@ -204,7 +204,7 @@ export default function SupportPage() {
                       {active.status === 'closed' ? (
                         <span className="px-1.5 py-0.5 rounded bg-white/10 text-white/60 font-semibold">CLOSED</span>
                       ) : (
-                        <span className="px-1.5 py-0.5 rounded bg-[#00b97a]/15 text-[#00b97a] font-semibold">OPEN</span>
+                        <span className="px-1.5 py-0.5 rounded bg-[#8B5CF6]/15 text-[#00b97a] font-semibold">OPEN</span>
                       )}
                     </div>
                   </div>
@@ -233,9 +233,9 @@ export default function SupportPage() {
                       value={reply}
                       onChange={e => setReply(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitReply(); } }}
-                      className="flex-1 resize-none bg-[#11161e] border border-white/10 rounded-md px-3 py-2 text-sm text-white outline-none focus:border-[#1a8eff]/50 max-h-32 min-h-[38px]"
+                      className="flex-1 resize-none bg-[#11161e] border border-white/10 rounded-md px-3 py-2 text-sm text-white outline-none focus:border-[#22D3EE]/50 max-h-32 min-h-[38px]"
                     />
-                    <Button onClick={submitReply} disabled={sending || !reply.trim()} className="bg-[#1a8eff] hover:bg-[#1278e6] h-10 px-4">
+                    <Button onClick={submitReply} disabled={sending || !reply.trim()} className="bg-[#22D3EE] hover:bg-[#0891B2] h-10 px-4">
                       {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     </Button>
                   </div>
@@ -250,11 +250,11 @@ export default function SupportPage() {
       {newOpen && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={() => setNewOpen(false)}>
           <div className="bg-[#0a0d12] border border-white/10 rounded-xl w-full max-w-md overflow-hidden" onClick={e => e.stopPropagation()}>
-            <div className="h-1 bg-gradient-to-r from-[#1a8eff] via-[#22d3ee] to-[#00b97a] animate-pulse" />
+            <div className="h-1 bg-gradient-to-r from-[#22D3EE] via-[#22d3ee] to-[#8B5CF6] animate-pulse" />
             <div className="p-5">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5 text-[#1a8eff]" /> New Support Ticket
+                  <MessageSquare className="w-5 h-5 text-[#22D3EE]" /> New Support Ticket
                 </h2>
                 <button onClick={() => setNewOpen(false)} className="w-8 h-8 rounded-md hover:bg-white/5 flex items-center justify-center"><X className="w-4 h-4" /></button>
               </div>
@@ -276,11 +276,11 @@ export default function SupportPage() {
                     value={message}
                     onChange={e => setMessage(e.target.value)}
                     placeholder="Describe your issue in detail..."
-                    className="mt-1 w-full resize-none bg-[#11161e] border border-white/10 rounded-md px-3 py-2 text-sm text-white outline-none focus:border-[#1a8eff]/50"
+                    className="mt-1 w-full resize-none bg-[#11161e] border border-white/10 rounded-md px-3 py-2 text-sm text-white outline-none focus:border-[#22D3EE]/50"
                     maxLength={4000}
                   />
                 </div>
-                <Button onClick={submitNew} disabled={sending} className="w-full bg-[#1a8eff] hover:bg-[#1278e6] font-bold">
+                <Button onClick={submitNew} disabled={sending} className="w-full bg-[#22D3EE] hover:bg-[#0891B2] font-bold">
                   {sending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Send className="w-4 h-4 mr-2" />}
                   Create Ticket
                 </Button>
@@ -297,9 +297,9 @@ function MessageBubble({ msg, isMine }) {
   return (
     <div className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
       <div className={`max-w-[80%] sm:max-w-[75%] rounded-lg px-3 py-2 ${
-        isMine ? 'bg-[#1a8eff]/20 border border-[#1a8eff]/30' : 'bg-[#11161e] border border-white/10'
+        isMine ? 'bg-[#22D3EE]/20 border border-[#22D3EE]/30' : 'bg-[#11161e] border border-white/10'
       }`}>
-        <div className={`text-[10px] uppercase tracking-wider mb-0.5 font-semibold ${isMine ? 'text-[#1a8eff]' : 'text-[#00b97a]'}`}>
+        <div className={`text-[10px] uppercase tracking-wider mb-0.5 font-semibold ${isMine ? 'text-[#22D3EE]' : 'text-[#00b97a]'}`}>
           {isMine ? 'You' : 'Support'}
         </div>
         <div className="text-sm whitespace-pre-wrap break-words">{msg.text}</div>

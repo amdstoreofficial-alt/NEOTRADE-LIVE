@@ -141,7 +141,7 @@ export default function AccountPage() {
             onClick={handleLogout}
             data-testid="account-logout-btn"
             variant="ghost"
-            className="text-white/70 hover:text-[#ff5555]"
+            className="text-white/70 hover:text-[#E53935]"
           >
             <LogOut className="w-4 h-4 mr-2" /> Log out
           </Button>
@@ -151,7 +151,7 @@ export default function AccountPage() {
       <div className="container mx-auto px-4 py-10 max-w-4xl">
         {/* Profile header */}
         <div className="flex items-center gap-4 mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00b97a]/30 to-[#22d3ee]/20 border border-[#00b97a]/40 flex items-center justify-center text-2xl font-extrabold">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#8B5CF6]/30 to-[#22d3ee]/20 border border-[#8B5CF6]/40 flex items-center justify-center text-2xl font-extrabold">
             {(user.name || user.email || '?').trim().charAt(0).toUpperCase()}
           </div>
           <div>
@@ -194,7 +194,7 @@ export default function AccountPage() {
                       className="bg-[#0c1015] border-white/10 h-10 flex-1"
                       maxLength={60}
                     />
-                    <Button type="submit" size="sm" disabled={savingName} data-testid="account-name-save-btn" className="bg-[#00b97a] hover:bg-[#00a86d] h-10">
+                    <Button type="submit" size="sm" disabled={savingName} data-testid="account-name-save-btn" className="bg-[#8B5CF6] hover:bg-[#7C3AED] h-10">
                       {savingName ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                     </Button>
                     <Button type="button" size="sm" variant="ghost" onClick={() => { setEditingName(false); setName(user.name || ''); }} data-testid="account-name-cancel-btn" className="text-white/60 h-10">
@@ -284,20 +284,20 @@ export default function AccountPage() {
                   type="password"
                   value={confirmNewPassword}
                   onChange={e => setConfirmNewPassword(e.target.value)}
-                  className={`bg-[#0c1015] mt-1 h-10 ${newPassMismatch ? 'border-[#ff5555]' : 'border-white/10'}`}
+                  className={`bg-[#0c1015] mt-1 h-10 ${newPassMismatch ? 'border-[#E53935]' : 'border-white/10'}`}
                   required
                   minLength={6}
                   autoComplete="new-password"
                 />
                 {newPassMismatch && (
-                  <p className="text-[11px] text-[#ff5555] mt-1" data-testid="account-new-password-mismatch">Passwords do not match.</p>
+                  <p className="text-[11px] text-[#E53935] mt-1" data-testid="account-new-password-mismatch">Passwords do not match.</p>
                 )}
               </div>
               <Button
                 type="submit"
                 data-testid="account-change-password-btn"
                 disabled={savingPass || newPassMismatch}
-                className="bg-[#00b97a] hover:bg-[#00a86d] font-semibold"
+                className="bg-[#8B5CF6] hover:bg-[#7C3AED] font-semibold"
               >
                 {savingPass ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <KeyRound className="w-4 h-4 mr-2" />}
                 Update password

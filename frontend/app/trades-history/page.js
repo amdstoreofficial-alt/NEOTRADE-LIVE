@@ -29,14 +29,14 @@ function StatusBadge({ trade }) {
   }
   if (trade.outcome === 'win') {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#00b97a]/15 text-[#00b97a]">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#8B5CF6]/15 text-[#00b97a]">
         <CheckCircle2 className="w-3 h-3" /> Win
       </span>
     );
   }
   if (trade.outcome === 'loss') {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#ff5555]/15 text-[#ff5555]">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#E53935]/15 text-[#E53935]">
         <XCircle className="w-3 h-3" /> Loss
       </span>
     );
@@ -137,12 +137,12 @@ export default function TradesHistoryPage() {
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
           <Stat label="Open" value={stats.open} accent="text-[#22d3ee]" testid="trades-stat-open" />
           <Stat label="Wins" value={stats.wins} accent="text-[#00b97a]" testid="trades-stat-wins" />
-          <Stat label="Losses" value={stats.losses} accent="text-[#ff5555]" testid="trades-stat-losses" />
+          <Stat label="Losses" value={stats.losses} accent="text-[#E53935]" testid="trades-stat-losses" />
           <Stat label="Win rate" value={`${stats.winRate}%`} accent="text-white" testid="trades-stat-winrate" />
           <Stat
             label="Net P&L"
             value={`${stats.totalPnl >= 0 ? '+' : ''}$${stats.totalPnl.toFixed(2)}`}
-            accent={stats.totalPnl >= 0 ? 'text-[#00b97a]' : 'text-[#ff5555]'}
+            accent={stats.totalPnl >= 0 ? 'text-[#00b97a]' : 'text-[#E53935]'}
             testid="trades-stat-pnl"
           />
         </div>
@@ -201,7 +201,7 @@ function FilterPill({ label, active, onClick, testid }) {
       onClick={onClick}
       data-testid={testid}
       className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
-        active ? 'bg-[#00b97a] text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
+        active ? 'bg-[#8B5CF6] text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
       }`}
     >
       {label}
@@ -219,7 +219,7 @@ function TradeRow({ t }) {
       data-testid={`trades-row-${t.id}`}
     >
       <div className="col-span-2 md:col-span-1 flex items-center gap-2">
-        <div className={`w-7 h-7 rounded-md flex items-center justify-center ${isUp ? 'bg-[#00b97a]/15 text-[#00b97a]' : 'bg-[#ff5555]/15 text-[#ff5555]'}`}>
+        <div className={`w-7 h-7 rounded-md flex items-center justify-center ${isUp ? 'bg-[#8B5CF6]/15 text-[#00b97a]' : 'bg-[#E53935]/15 text-[#E53935]'}`}>
           <Dir className="w-3.5 h-3.5" />
         </div>
         <div>
@@ -230,7 +230,7 @@ function TradeRow({ t }) {
       <div className="text-right md:text-right text-sm font-mono">${Number(t.amount || 0).toFixed(2)}</div>
       <div className="hidden md:block text-right text-xs font-mono text-white/70">{t.openPrice ? Number(t.openPrice).toFixed(5) : '—'}</div>
       <div className="hidden md:block text-right text-xs font-mono text-white/70">{t.closePrice ? Number(t.closePrice).toFixed(5) : '—'}</div>
-      <div className={`text-right text-sm font-mono font-bold ${pnl > 0 ? 'text-[#00b97a]' : pnl < 0 ? 'text-[#ff5555]' : 'text-white/40'}`}>
+      <div className={`text-right text-sm font-mono font-bold ${pnl > 0 ? 'text-[#00b97a]' : pnl < 0 ? 'text-[#E53935]' : 'text-white/40'}`}>
         {t.status === 'open' ? '—' : `${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}`}
       </div>
       <div><StatusBadge trade={t} /></div>

@@ -60,7 +60,7 @@ export default function Leaderboard({ compact = false }) {
               : 'No live-account trades closed today yet. Switch to Live, place a trade, and lead the board!'}
           </div>
         ) : rows.map((r) => (
-          <div key={r.rank} className={`flex items-center gap-2 px-3 py-2 border-b border-white/[0.03] last:border-b-0 ${r.isMe ? 'bg-[#00b97a]/10' : 'hover:bg-white/[0.02]'}`}>
+          <div key={r.rank} className={`flex items-center gap-2 px-3 py-2 border-b border-white/[0.03] last:border-b-0 ${r.isMe ? 'bg-[#8B5CF6]/10' : 'hover:bg-white/[0.02]'}`}>
             <RankBadge rank={r.rank} />
             <div className="flex-1 min-w-0">
               <div className="text-xs font-bold truncate flex items-center gap-1.5">
@@ -68,13 +68,13 @@ export default function Leaderboard({ compact = false }) {
                 {r.userId && (
                   <span className="text-[9px] font-mono text-white/40 shrink-0" data-testid="leaderboard-user-id">{r.userId}</span>
                 )}
-                {r.isMe && <span className="text-[8px] px-1 py-0.5 bg-[#00b97a] text-white rounded uppercase shrink-0">You</span>}
+                {r.isMe && <span className="text-[8px] px-1 py-0.5 bg-[#8B5CF6] text-white rounded uppercase shrink-0">You</span>}
               </div>
               <div className="text-[10px] text-white/40">
                 {r.wins}W · {r.losses}L · {r.trades} trades
               </div>
             </div>
-            <div className={`text-xs font-bold font-mono ${r.totalPnl >= 0 ? 'text-[#00b97a]' : 'text-[#ff5555]'}`}>
+            <div className={`text-xs font-bold font-mono ${r.totalPnl >= 0 ? 'text-[#00b97a]' : 'text-[#E53935]'}`}>
               {r.totalPnl >= 0 ? '+' : ''}${r.totalPnl.toFixed(2)}
             </div>
           </div>

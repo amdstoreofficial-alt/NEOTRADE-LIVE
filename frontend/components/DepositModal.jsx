@@ -106,12 +106,12 @@ export default function DepositModal({ open, onClose, onSuccess }) {
 
         {done ? (
           <div className="p-8 text-center">
-            <div className="w-16 h-16 rounded-full bg-[#00b97a]/20 mx-auto flex items-center justify-center mb-3">
+            <div className="w-16 h-16 rounded-full bg-[#8B5CF6]/20 mx-auto flex items-center justify-center mb-3">
               <CheckCircle2 className="w-8 h-8 text-[#00b97a]" />
             </div>
             <div className="text-lg font-bold mb-1">Request Submitted</div>
             <div className="text-sm text-white/60 mb-4">Your deposit is pending admin approval. Funds will be credited to your Live balance once verified.</div>
-            <Button onClick={handleClose} className="bg-[#00b97a] hover:bg-[#00a86d] font-bold">Done</Button>
+            <Button onClick={handleClose} className="bg-[#8B5CF6] hover:bg-[#7C3AED] font-bold">Done</Button>
           </div>
         ) : (
           <div className="overflow-y-auto p-4 sm:p-5 space-y-4">
@@ -134,7 +134,7 @@ export default function DepositModal({ open, onClose, onSuccess }) {
             {/* Step 2: amount */}
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-full bg-[#1a8eff] text-white text-xs font-bold flex items-center justify-center">2</div>
+                <div className="w-6 h-6 rounded-full bg-[#22D3EE] text-white text-xs font-bold flex items-center justify-center">2</div>
                 <div className="text-sm font-bold">Amount sent (USD)</div>
               </div>
               <div className="relative">
@@ -159,7 +159,7 @@ export default function DepositModal({ open, onClose, onSuccess }) {
             {/* Step 3: transaction hash */}
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-full bg-[#1a8eff] text-white text-xs font-bold flex items-center justify-center">3</div>
+                <div className="w-6 h-6 rounded-full bg-[#22D3EE] text-white text-xs font-bold flex items-center justify-center">3</div>
                 <div className="text-sm font-bold">Transaction hash / ID</div>
               </div>
               <Input
@@ -174,13 +174,13 @@ export default function DepositModal({ open, onClose, onSuccess }) {
             {/* Step 4: screenshot */}
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-full bg-[#1a8eff] text-white text-xs font-bold flex items-center justify-center">4</div>
+                <div className="w-6 h-6 rounded-full bg-[#22D3EE] text-white text-xs font-bold flex items-center justify-center">4</div>
                 <div className="text-sm font-bold">Screenshot of transaction</div>
               </div>
               <label className="block cursor-pointer">
                 <input type="file" accept="image/*" className="hidden" onChange={onFile} />
                 {screenshot ? (
-                  <div className="relative bg-[#11161e] border border-[#00b97a]/40 rounded-lg p-2 flex items-center gap-3">
+                  <div className="relative bg-[#11161e] border border-[#8B5CF6]/40 rounded-lg p-2 flex items-center gap-3">
                     <img src={screenshot.dataUrl} alt="Transaction" className="w-16 h-16 rounded object-cover bg-black/30" />
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-bold truncate">{screenshot.name}</div>
@@ -191,7 +191,7 @@ export default function DepositModal({ open, onClose, onSuccess }) {
                     </button>
                   </div>
                 ) : (
-                  <div className="bg-[#11161e] border-2 border-dashed border-white/10 hover:border-[#1a8eff]/50 rounded-lg p-6 text-center transition">
+                  <div className="bg-[#11161e] border-2 border-dashed border-white/10 hover:border-[#22D3EE]/50 rounded-lg p-6 text-center transition">
                     <Upload className="w-6 h-6 mx-auto text-white/40 mb-2" />
                     <div className="text-xs font-bold text-white/70">Tap to upload screenshot</div>
                     <div className="text-[10px] text-white/40 mt-0.5">PNG, JPG · max 1 MB</div>
@@ -209,7 +209,7 @@ export default function DepositModal({ open, onClose, onSuccess }) {
             <Button
               onClick={submit}
               disabled={submitting}
-              className="w-full h-11 bg-[#00b97a] hover:bg-[#00a86d] font-bold text-sm"
+              className="w-full h-11 bg-[#8B5CF6] hover:bg-[#7C3AED] font-bold text-sm"
             >
               {submitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
               {submitting ? 'Submitting…' : 'Submit for approval'}
@@ -228,7 +228,7 @@ function CopyRow({ label, value, onCopy, mono }) {
         <div className="text-[9px] uppercase tracking-wider text-white/40">{label}</div>
         <div className={`text-sm font-bold truncate ${mono ? 'font-mono' : ''}`}>{value}</div>
       </div>
-      <button onClick={() => onCopy(value, label)} className="w-8 h-8 rounded-md bg-white/5 hover:bg-[#1a8eff]/20 hover:text-[#1a8eff] text-white/60 flex items-center justify-center shrink-0" title="Copy">
+      <button onClick={() => onCopy(value, label)} className="w-8 h-8 rounded-md bg-white/5 hover:bg-[#22D3EE]/20 hover:text-[#22D3EE] text-white/60 flex items-center justify-center shrink-0" title="Copy">
         <Copy className="w-3.5 h-3.5" />
       </button>
     </div>

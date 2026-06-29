@@ -52,7 +52,7 @@ export default function AssetList({
           onClick={() => setAssetTab('otc')}
           className={`flex-1 px-4 py-2.5 text-xs font-bold uppercase ${
             assetTab === 'otc'
-              ? 'text-[#00b97a] border-b-2 border-[#00b97a]'
+              ? 'text-[#00b97a] border-b-2 border-[#8B5CF6]'
               : 'text-white/40 hover:text-white/70'
           }`}
         >
@@ -64,7 +64,7 @@ export default function AssetList({
           onClick={() => setAssetTab('live')}
           className={`flex-1 px-4 py-2.5 text-xs font-bold uppercase ${
             assetTab === 'live'
-              ? 'text-[#ff5555] border-b-2 border-[#ff5555]'
+              ? 'text-[#E53935] border-b-2 border-[#E53935]'
               : 'text-white/40 hover:text-white/70'
           }`}
         >

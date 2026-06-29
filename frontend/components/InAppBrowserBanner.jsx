@@ -99,7 +99,7 @@ const InAppBrowserBanner = () => {
   return (
     <div
       data-testid="inapp-browser-banner"
-      className="fixed top-0 inset-x-0 z-[100] bg-[#00b97a] text-white text-xs sm:text-sm shadow-md"
+      className="fixed top-0 inset-x-0 z-[100] bg-[#8B5CF6] text-white text-xs sm:text-sm shadow-md"
     >
       <div className="container mx-auto px-3 py-2 flex items-center gap-3">
         <div className="flex-1 leading-snug">
